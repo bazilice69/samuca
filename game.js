@@ -771,6 +771,7 @@ function acaoAtacar() {
   inimigoAtual.vida -= dano;
   atualizarBarras();               // atualiza a barra ANTES da animação (garante que mostre)
   tremer("batalha-inimigo-sprite");
+  animAtaqueHeroi(dano);           // 💥 explosão + número de dano
   escreverLog(`${jogador.nome} atacou e causou ${dano} de dano! 💥`);
   fimDoTurnoJogador();
 }
@@ -786,11 +787,13 @@ function acaoEspecial() {
     const dano = esp.dano + jogador.attr.dano * VALOR_ATTR.dano + bonusEquipamento("dano");
     inimigoAtual.vida -= dano;
     tremer("batalha-inimigo-sprite");
+    animEspecialHeroi(esp.emoji, dano);   // ✨ magia voa até o inimigo
   }
   if (esp.cura) {
     // cura base + bônus de Especial
     const cura = esp.cura + jogador.attr.especial * VALOR_ATTR.especial;
     jogador.vida = Math.min(jogador.vidaMax, jogador.vida + cura);
+    animCura(cura);                       // 💚 número verde de cura
   }
   escreverLog(msg);
   atualizarBarras();
@@ -892,6 +895,7 @@ function turnoDoInimigo() {
       SONS.dano();
       escreverLog(`🔮💥 ${inimigoAtual.nome} lançou uma MAGIA DEVASTADORA! ${danoMagia} de dano! 😱`);
     }
+    animMagiaRei(danoMagia);          // 🔮 feitiço voa até o herói
     tremer("batalha-heroi-sprite");
     atualizarBarras();
     if (jogador.vida <= 0) { setTimeout(jogadorDerrotado, 900); return; }
@@ -921,6 +925,7 @@ function turnoDoInimigo() {
   jogador.vida -= dano;
   SONS.dano();
   tremer("batalha-heroi-sprite");
+  animAtaqueInimigo(dano);           // 💢 impacto + número de dano no herói
   escreverLog(`${inimigoAtual.nome} atacou e causou ${dano} de dano! 😣`);
   atualizarBarras();
 
@@ -962,6 +967,7 @@ function acaoRon() {
   const dano = 35 + Math.floor(Math.random() * 20); // fogo do Ron bem mais forte! 🔥
   inimigoAtual.vida -= dano;
   tremer("batalha-inimigo-sprite");
+  animFogoRon(dano);                 // 🔥 bola de fogo voa até o inimigo
   pulaRon();
   escreverLog(`🐉 Ron cospe uma labareda de fogo! 🔥 Causou ${dano} de dano!`);
   atualizarBarras();
