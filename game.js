@@ -111,7 +111,7 @@ function comecarAventura() {
   document.getElementById("ilha-info-heroi").textContent = `${p.icone} ${jogador.nome} — ${p.nome}`;
 
   document.getElementById("ilha-dialogo").textContent =
-    `${jogador.nome} abre os olhos numa pequena ilha deserta. O mar se estende até o horizonte, cheio de outras ilhas misteriosas...`;
+    `${jogador.nome} abre os olhos numa pequena ilha deserta. De repente, um filhote de dragão 🐉 surge saltitando da areia! "Grrr... au!" — é o Ron, o mascote da equipe! 🎉`;
 }
 
 let olhadas = 0;
@@ -280,9 +280,42 @@ function turnoDoInimigo() {
     setTimeout(jogadorDerrotado, 900);
     return;
   }
+
+  // O Ron (filhote de dragão) tem chance de ajudar! 🐉🔥
+  if (Math.random() < 0.4) {
+    setTimeout(ronAjuda, 1000);
+  } else {
+    // volta pro jogador
+    turnoDoJogador = true;
+    ligarBotoes(true);
+  }
+}
+
+// Ron cospe fogo no inimigo
+function ronAjuda() {
+  const dano = 10 + Math.floor(Math.random() * 10);
+  inimigoAtual.vida -= dano;
+  tremer("batalha-inimigo-sprite");
+  pulaRon();
+  escreverLog(`🐉 Ron cospe fogo no inimigo! 🔥 Causou ${dano} de dano!`);
+  atualizarBarras();
+
+  if (inimigoAtual.vida <= 0) {
+    setTimeout(inimigoDerrotado, 900);
+    return;
+  }
   // volta pro jogador
   turnoDoJogador = true;
   ligarBotoes(true);
+}
+
+// faz o Ron pular quando ajuda
+function pulaRon() {
+  const el = document.getElementById("ron-batalha");
+  if (!el) return;
+  el.classList.remove("ron-pula");
+  void el.offsetWidth;
+  el.classList.add("ron-pula");
 }
 
 function inimigoDerrotado() {
