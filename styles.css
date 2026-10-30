@@ -559,3 +559,21 @@ body {
   .attr-emoji { font-size: 22px; }
   .status-box h2 { font-size: 20px; }
 }
+
+/* ====== CANVAS PIXEL ART (nitidez dos pixels) ====== */
+canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+/* sprite da profissão (tela criar) */
+.prof-sprite { width: 72px; height: 72px; }
+/* sprites de batalha e ilha agora são canvas */
+.sprite { width: auto; height: auto; }
+.heroi-sprite { width: 112px; height: 112px; }
+
+@media (max-width: 420px) {
+  .prof-sprite { width: 60px; height: 60px; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .prof-sprite { width: 54px; height: 54px; }
+}

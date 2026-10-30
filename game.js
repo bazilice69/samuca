@@ -337,7 +337,7 @@ function comecarAventura() {
   jogador.vida = jogador.vidaMax;
 
   const p = PROFISSOES[jogador.profissao];
-  document.getElementById("heroi-sprite").textContent = p.icone;
+  desenharSprite(document.getElementById("heroi-sprite"), jogador.profissao, 7);
   document.getElementById("ilha-info-heroi").textContent = `${p.icone} ${jogador.nome} — ${p.nome}`;
 
   document.getElementById("ilha-dialogo").textContent =
@@ -376,7 +376,7 @@ function viajarPrimeiraIlha() {
   const dialogo = document.getElementById("ilha-dialogo");
   dialogo.textContent =
     `${jogador.nome} e sua equipe embarcam no pequeno barco rumo à primeira ilha... 🚢`;
-  document.getElementById("heroi-sprite").textContent = "⛵";
+  desenharSprite(document.getElementById("heroi-sprite"), "barco", 7);
   document.getElementById("btn-viajar").style.display = "none";
 
   // depois de um instante, começa o Capítulo 1
@@ -390,17 +390,17 @@ const CAPITULOS = [
   {
     titulo: "Capítulo 1 — A Ilha da Selva 🌴",
     inimigos: [
-      { tipo: "capanga", nome: "Capanga Fominha", emoji: "👹", vidaMax: 50,  ataque: 10 },
-      { tipo: "capanga", nome: "Capanga Brutamontes", emoji: "👺", vidaMax: 70,  ataque: 14 },
-      { tipo: "chefao",  nome: "GRRRAU, o Chefão da Selva", emoji: "🦍", vidaMax: 130, ataque: 20 },
+      { tipo: "capanga", nome: "Capanga Fominha", sprite: "chefe_selva", emoji: "👹", vidaMax: 50,  ataque: 10 },
+      { tipo: "capanga", nome: "Capanga Brutamontes", sprite: "chefe_selva", emoji: "👺", vidaMax: 70,  ataque: 14 },
+      { tipo: "chefao",  nome: "GRRRAU, o Chefão da Selva", sprite: "chefe_selva", emoji: "🦍", vidaMax: 130, ataque: 20 },
     ],
   },
   {
     titulo: "Capítulo 2 — A Ilha dos Piratas 🏴‍☠️",
     inimigos: [
-      { tipo: "capanga", nome: "Pirata Perna-de-Pau", emoji: "🦜", vidaMax: 75,  ataque: 15 },
-      { tipo: "capanga", nome: "Pirata Barba-Negra", emoji: "🧔‍♂️", vidaMax: 95,  ataque: 19 },
-      { tipo: "chefao",  nome: "Capitão Caveira, o Rei dos Mares", emoji: "🏴‍☠️", vidaMax: 170, ataque: 26 },
+      { tipo: "capanga", nome: "Pirata Perna-de-Pau", sprite: "chefe_pirata", emoji: "🦜", vidaMax: 75,  ataque: 15 },
+      { tipo: "capanga", nome: "Pirata Barba-Negra", sprite: "chefe_pirata", emoji: "🧔‍♂️", vidaMax: 95,  ataque: 19 },
+      { tipo: "chefao",  nome: "Capitão Caveira, o Rei dos Mares", sprite: "chefe_pirata", emoji: "🏴‍☠️", vidaMax: 170, ataque: 26 },
     ],
   },
 ];
@@ -430,7 +430,7 @@ function iniciarCapitulo(num) {
   mostrarTela("tela-batalha");
 
   const p = PROFISSOES[jogador.profissao];
-  document.getElementById("batalha-heroi-sprite").textContent = p.icone;
+  desenharSprite(document.getElementById("batalha-heroi-sprite"), jogador.profissao, 7);
   document.getElementById("batalha-heroi-nome").textContent = jogador.nome;
 
   document.getElementById("cap-titulo").textContent = CAPITULOS[num].titulo;
@@ -448,7 +448,7 @@ function prepararInimigo() {
   inimigoAtual = { ...lista[indiceInimigo], vida: lista[indiceInimigo].vidaMax };
   turnoDoJogador = true;
 
-  document.getElementById("batalha-inimigo-sprite").textContent = inimigoAtual.emoji;
+  desenharSprite(document.getElementById("batalha-inimigo-sprite"), inimigoAtual.sprite, 7);
   document.getElementById("batalha-inimigo-nome").textContent = inimigoAtual.nome;
 
   atualizarBarras();
@@ -671,3 +671,13 @@ function tremer(id) {
   void el.offsetWidth; // reinicia a animação
   el.classList.add("tremer");
 }
+
+// ============================================
+//  DESENHAR OS SPRITES FIXOS AO CARREGAR A PÁGINA
+// ============================================
+window.addEventListener("DOMContentLoaded", () => {
+  // desenha todos os canvas que têm data-sprite (profissões, Ron...)
+  document.querySelectorAll("canvas[data-sprite]").forEach(c => {
+    desenharSprite(c, c.dataset.sprite, 5);
+  });
+});

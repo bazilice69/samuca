@@ -40,19 +40,19 @@
       <label class="label">Escolha a profissão:</label>
       <div class="profissoes">
         <button class="prof" data-prof="policial" onclick="escolherProfissao('policial', this)">
-          <span class="prof-icone">👮</span>
+          <canvas class="prof-sprite" data-sprite="policial"></canvas>
           <span class="prof-nome">Policial</span>
         </button>
         <button class="prof" data-prof="bombeiro" onclick="escolherProfissao('bombeiro', this)">
-          <span class="prof-icone">🚒</span>
+          <canvas class="prof-sprite" data-sprite="bombeiro"></canvas>
           <span class="prof-nome">Bombeiro</span>
         </button>
         <button class="prof" data-prof="medico" onclick="escolherProfissao('medico', this)">
-          <span class="prof-icone">🧑‍⚕️</span>
+          <canvas class="prof-sprite" data-sprite="medico"></canvas>
           <span class="prof-nome">Médico</span>
         </button>
         <button class="prof" data-prof="cozinheiro" onclick="escolherProfissao('cozinheiro', this)">
-          <span class="prof-icone">🧑‍🍳</span>
+          <canvas class="prof-sprite" data-sprite="cozinheiro"></canvas>
           <span class="prof-nome">Cozinheiro</span>
         </button>
       </div>
@@ -72,8 +72,8 @@
     <div class="ilha-cena">
       <div class="ilha-chao">
         <div class="palmeira">🌴</div>
-        <div id="heroi-sprite" class="heroi-sprite">👮</div>
-        <div class="ron-ilha" title="Ron, o mascote!">🐉</div>
+        <canvas id="heroi-sprite" class="heroi-sprite"></canvas>
+        <canvas class="ron-ilha" data-sprite="ron" title="Ron, o mascote!"></canvas>
         <div class="fogueira">🔥</div>
       </div>
       <div class="ilha-mar"></div>
@@ -104,7 +104,7 @@
           <div class="barra-fundo"><div id="barra-inimigo" class="barra barra-inimigo"></div></div>
           <span id="vida-inimigo-txt" class="vida-txt">0/0</span>
         </div>
-        <div id="batalha-inimigo-sprite" class="sprite sprite-inimigo">👹</div>
+        <canvas id="batalha-inimigo-sprite" class="sprite sprite-inimigo"></canvas>
       </div>
 
       <div class="versus">⚔️</div>
@@ -112,8 +112,8 @@
       <!-- Herói -->
       <div class="lado-heroi">
         <div class="heroi-com-ron">
-          <div id="batalha-heroi-sprite" class="sprite sprite-heroi">🧑‍🍳</div>
-          <div id="ron-batalha" class="ron-batalha" title="Ron">🐉</div>
+          <canvas id="batalha-heroi-sprite" class="sprite sprite-heroi"></canvas>
+          <canvas id="ron-batalha" class="ron-batalha" data-sprite="ron" title="Ron"></canvas>
         </div>
         <div class="combatente">
           <span id="batalha-heroi-nome" class="comb-nome">Herói</span>
@@ -185,6 +185,7 @@
     </div>
   </div>
 
+  <script src="sprites.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
