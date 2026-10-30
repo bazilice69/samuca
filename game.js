@@ -533,6 +533,7 @@ function prepararInimigo() {
   const lista = CAPITULOS[capituloAtual].inimigos;
   inimigoAtual = { ...lista[indiceInimigo], vida: lista[indiceInimigo].vidaMax };
   turnoDoJogador = true;
+  ronEnergia = RON_MAX;   // o Ron começa pronto a cada novo inimigo
 
   desenharSprite(document.getElementById("batalha-inimigo-sprite"), inimigoAtual.sprite, 7);
   document.getElementById("batalha-inimigo-nome").textContent = inimigoAtual.nome;
@@ -657,9 +658,9 @@ function turnoDoInimigo() {
 }
 
 // --- RON: botão próprio controlado pelo jogador 🐉 ---
-let ronEnergia = 3;         // começa pronto
-const RON_MAX = 3;          // precisa de 3 de energia pra cuspir fogo
-const RON_CUSTO = 3;
+let ronEnergia = 2;         // começa pronto
+const RON_MAX = 2;          // precisa de 2 de energia pra cuspir fogo (recarrega rápido!)
+const RON_CUSTO = 2;
 
 function atualizarBotaoRon() {
   const btn = document.getElementById("btn-ron");
