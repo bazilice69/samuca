@@ -90,6 +90,10 @@
   <section id="tela-batalha" class="tela">
     <div class="batalha-topo">
       <span id="cap-titulo" class="cap-titulo">Capítulo 1</span>
+      <span id="hud-nivel" class="hud-nivel">Nv.1 XP 0/50</span>
+      <button id="btn-status-batalha" class="btn-status" onclick="abrirStatus('tela-batalha')">
+        📊 Status <span id="pontos-badge" class="pontos-badge" style="display:none;">0</span>
+      </button>
     </div>
 
     <div class="batalha-arena">
@@ -147,6 +151,19 @@
       <p id="album-contador" class="album-contador">0 de 0 conquistas</p>
       <div id="album-grade" class="album-grade"></div>
       <button class="btn btn-grande" onclick="fecharAlbum()">⬅ Voltar</button>
+    </div>
+  </section>
+
+  <!-- ============ TELA 8: STATUS / UPGRADE ============ -->
+  <section id="tela-status" class="tela">
+    <div class="status-box">
+      <h2 id="status-cabecalho">🧑‍🍳 Herói — Nível 1</h2>
+      <p id="status-xp" class="status-xp">XP: 0 / 50</p>
+      <p id="status-pontos" class="status-pontos">Pontos disponíveis: 0</p>
+
+      <div id="status-atributos" class="status-atributos"></div>
+
+      <button class="btn btn-grande" onclick="fecharStatus()">⬅ Voltar</button>
     </div>
   </section>
 

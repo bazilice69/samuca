@@ -9,6 +9,35 @@ const jogador = {
   icone: "",
   vidaMax: 100,
   vida: 100,
+
+  // --- SISTEMA DE NÍVEL (RPG) ---
+  nivel: 1,
+  xp: 0,
+  xpProximo: 50,   // XP necessário pra subir de nível
+  pontos: 0,       // pontos livres pra distribuir
+
+  // atributos que o jogador melhora (começam em 0 de bônus)
+  attr: {
+    forca: 0,    // +dano no ataque normal
+    dano: 0,     // +dano no especial
+    especial: 0, // +efeito do especial (cura/poder)
+    hp: 0,       // +vida máxima
+  },
+};
+
+// quanto cada ponto de atributo vale
+const VALOR_ATTR = {
+  forca: 3,     // cada ponto = +3 de dano no ataque
+  dano: 4,      // cada ponto = +4 de dano no especial
+  especial: 3,  // cada ponto = +3 de cura/poder especial
+  hp: 20,       // cada ponto = +20 de vida máxima
+};
+
+const ATTR_INFO = {
+  forca:    { emoji: "💪", nome: "Força",    desc: "+3 de dano no ataque normal" },
+  dano:     { emoji: "⚔️", nome: "Dano",     desc: "+4 de dano no golpe especial" },
+  especial: { emoji: "✨", nome: "Especial", desc: "+3 no poder/cura do especial" },
+  hp:       { emoji: "❤️", nome: "HP",       desc: "+20 de vida máxima" },
 };
 
 // Dados de cada profissão
@@ -19,6 +48,139 @@ const PROFISSOES = {
   medico:     { icone: "🧑‍⚕️", nome: "Médico",     desc: "Cura os feridos e mantém a equipe viva durante a aventura.", ataque: 15, especial: { nome: "Cura!", emoji: "💊", cura: 35, texto: "aplica um remédio e recupera a própria vida" } },
   cozinheiro: { icone: "🧑‍🍳", nome: "Cozinheiro", desc: "Cozinha pratos que dão energia e força para toda a equipe!", ataque: 17, especial: { nome: "Prato Quente!", emoji: "🍲", cura: 25, dano: 12, texto: "joga um prato fervendo: dá dano e ainda recupera energia" } },
 };
+
+// ============================================
+//  SISTEMA DE NÍVEL E ATRIBUTOS (RPG) 📊
+// ============================================
+
+// salva o progresso do herói no celular
+function salvarHeroi() {
+  localStorage.setItem("ilhas_heroi", JSON.stringify({
+    nivel: jogador.nivel, xp: jogador.xp, xpProximo: jogador.xpProximo,
+    pontos: jogador.pontos, attr: jogador.attr,
+  }));
+}
+
+// carrega o progresso salvo (se existir)
+function carregarHeroi() {
+  const salvo = JSON.parse(localStorage.getItem("ilhas_heroi") || "null");
+  if (salvo) {
+    jogador.nivel = salvo.nivel;
+    jogador.xp = salvo.xp;
+    jogador.xpProximo = salvo.xpProximo;
+    jogador.pontos = salvo.pontos;
+    jogador.attr = salvo.attr;
+  }
+}
+
+// calcula a vida máxima atual (base + bônus de HP)
+function calcularVidaMax() {
+  jogador.vidaMax = 100 + jogador.attr.hp * VALOR_ATTR.hp;
+}
+
+// dano do ataque normal (base da profissão + bônus de força)
+function danoAtaqueNormal() {
+  const base = PROFISSOES[jogador.profissao].ataque;
+  return base + jogador.attr.forca * VALOR_ATTR.forca + Math.floor(Math.random() * 8);
+}
+
+// ganhar XP (e subir de nível se encher)
+function ganharXp(qtd) {
+  jogador.xp += qtd;
+  let subiu = false;
+  while (jogador.xp >= jogador.xpProximo) {
+    jogador.xp -= jogador.xpProximo;
+    jogador.nivel++;
+    jogador.pontos += 2; // 2 pontos por nível
+    jogador.xpProximo = Math.round(jogador.xpProximo * 1.4); // cada nível exige mais
+    subiu = true;
+  }
+  salvarHeroi();
+  atualizarHudNivel();
+  if (subiu) avisarSubiuNivel();
+}
+
+function avisarSubiuNivel() {
+  mostrarPopupConquista({
+    emoji: "⬆️",
+    titulo: `Subiu para o Nível ${jogador.nivel}!`,
+    desc: `Você ganhou pontos! Abra o 📊 Status para distribuir.`,
+  });
+  // pisca o botão de status pra chamar atenção
+  const b = document.getElementById("btn-status-batalha");
+  if (b) { b.classList.add("piscando"); }
+}
+
+// mostra nível/XP no topo da batalha
+function atualizarHudNivel() {
+  const el = document.getElementById("hud-nivel");
+  if (el) el.textContent = `Nv.${jogador.nivel}  XP ${jogador.xp}/${jogador.xpProximo}`;
+  const badge = document.getElementById("pontos-badge");
+  if (badge) {
+    badge.textContent = jogador.pontos;
+    badge.style.display = jogador.pontos > 0 ? "inline-block" : "none";
+  }
+}
+
+// --- TELA DE STATUS / UPGRADE ---
+function abrirStatus(voltarPara) {
+  window._statusVoltar = voltarPara || "tela-batalha";
+  renderStatus();
+  mostrarTela("tela-status");
+}
+
+function fecharStatus() {
+  mostrarTela(window._statusVoltar || "tela-batalha");
+  // tira o "piscando" do botão quando o jogador já olhou
+  const b = document.getElementById("btn-status-batalha");
+  if (b) b.classList.remove("piscando");
+}
+
+function renderStatus() {
+  const p = PROFISSOES[jogador.profissao];
+  document.getElementById("status-cabecalho").textContent =
+    `${p.icone} ${jogador.nome} — Nível ${jogador.nivel}`;
+  document.getElementById("status-xp").textContent =
+    `XP: ${jogador.xp} / ${jogador.xpProximo}`;
+  document.getElementById("status-pontos").textContent =
+    `Pontos disponíveis: ${jogador.pontos}`;
+
+  const lista = document.getElementById("status-atributos");
+  lista.innerHTML = "";
+  for (const [chave, info] of Object.entries(ATTR_INFO)) {
+    const valor = jogador.attr[chave];
+    const linha = document.createElement("div");
+    linha.className = "attr-linha";
+    linha.innerHTML = `
+      <span class="attr-emoji">${info.emoji}</span>
+      <span class="attr-nome">${info.nome}
+        <small>${info.desc}</small>
+      </span>
+      <span class="attr-valor">Nv ${valor}</span>
+      <button class="attr-mais" ${jogador.pontos > 0 ? "" : "disabled"}
+        onclick="distribuirPonto('${chave}')">+</button>
+    `;
+    lista.appendChild(linha);
+  }
+}
+
+function distribuirPonto(chave) {
+  if (jogador.pontos <= 0) return;
+  jogador.pontos--;
+  jogador.attr[chave]++;
+
+  // se mexeu no HP, atualiza vida máxima (e cura a diferença)
+  if (chave === "hp") {
+    const antes = jogador.vidaMax;
+    calcularVidaMax();
+    jogador.vida += (jogador.vidaMax - antes); // ganha a vida nova na hora
+    if (document.getElementById("tela-batalha").classList.contains("ativa")) atualizarBarras();
+  }
+
+  salvarHeroi();
+  renderStatus();
+  atualizarHudNivel();
+}
 
 // ============================================
 //  ÁLBUM DE CONQUISTAS 🏅
@@ -170,6 +332,10 @@ function verificarPodeComecar() {
 function comecarAventura() {
   mostrarTela("tela-ilha");
 
+  carregarHeroi();      // carrega nível/XP/pontos salvos (se houver)
+  calcularVidaMax();    // aplica bônus de HP
+  jogador.vida = jogador.vidaMax;
+
   const p = PROFISSOES[jogador.profissao];
   document.getElementById("heroi-sprite").textContent = p.icone;
   document.getElementById("ilha-info-heroi").textContent = `${p.icone} ${jogador.nome} — ${p.nome}`;
@@ -250,12 +416,16 @@ function iniciarCapitulo(num) {
   indiceInimigo = 0;
   ronEnergia = RON_MAX;           // Ron começa pronto
 
+  calcularVidaMax();              // aplica bônus de HP dos atributos
+
   // no 1º capítulo começa com vida cheia; nos seguintes, recupera parte da vida
   if (num === 0) {
     jogador.vida = jogador.vidaMax;
   } else {
     jogador.vida = Math.min(jogador.vidaMax, jogador.vida + 40);
   }
+
+  atualizarHudNivel();
 
   mostrarTela("tela-batalha");
 
@@ -315,8 +485,7 @@ function ligarBotoes(ligado) {
 // --- AÇÕES DO JOGADOR ---
 function acaoAtacar() {
   if (!turnoDoJogador) return;
-  const p = PROFISSOES[jogador.profissao];
-  const dano = p.ataque + Math.floor(Math.random() * 8); // um pouco de sorte
+  const dano = danoAtaqueNormal(); // base da profissão + bônus de Força
   inimigoAtual.vida -= dano;
   tremer("batalha-inimigo-sprite");
   escreverLog(`${jogador.nome} atacou e causou ${dano} de dano! 💥`);
@@ -330,11 +499,15 @@ function acaoEspecial() {
   let msg = `${jogador.nome} usou ${esp.nome} ${esp.emoji} — ${esp.texto}!`;
 
   if (esp.dano) {
-    inimigoAtual.vida -= esp.dano;
+    // dano base do especial + bônus de Dano
+    const dano = esp.dano + jogador.attr.dano * VALOR_ATTR.dano;
+    inimigoAtual.vida -= dano;
     tremer("batalha-inimigo-sprite");
   }
   if (esp.cura) {
-    jogador.vida = Math.min(jogador.vidaMax, jogador.vida + esp.cura);
+    // cura base + bônus de Especial
+    const cura = esp.cura + jogador.attr.especial * VALOR_ATTR.especial;
+    jogador.vida = Math.min(jogador.vidaMax, jogador.vida + cura);
   }
   escreverLog(msg);
   atualizarBarras();
@@ -430,6 +603,10 @@ function pulaRon() {
 function inimigoDerrotado() {
   const eraChefao = inimigoAtual.tipo === "chefao";
   const lista = CAPITULOS[capituloAtual].inimigos;
+
+  // ganha XP: chefão dá bem mais que capanga
+  const xpGanho = eraChefao ? 40 : 18;
+  ganharXp(xpGanho);
 
   desbloquear("primeira_luta");           // primeira vitória em combate
 

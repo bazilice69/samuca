@@ -461,3 +461,101 @@ body {
   .conq-emoji { font-size: 32px; }
   .btn-ron { padding: 9px 14px; font-size: 14px; }
 }
+
+/* ====== HUD DE NÍVEL NA BATALHA ====== */
+.batalha-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hud-nivel {
+  font-size: 13px;
+  background: rgba(0,0,0,0.3);
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+.btn-status {
+  background: var(--dourado);
+  color: var(--escuro);
+  border: none;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+}
+.btn-status:active { transform: scale(0.96); }
+.btn-status.piscando { animation: piscar-btn 0.8s ease-in-out infinite; }
+@keyframes piscar-btn {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,207,92,0.8); }
+  50% { box-shadow: 0 0 0 8px rgba(255,207,92,0); }
+}
+.pontos-badge {
+  position: absolute;
+  top: -8px; right: -8px;
+  background: #e53935;
+  color: #fff;
+  font-size: 12px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+  text-align: center;
+}
+
+/* ====== TELA DE STATUS / UPGRADE ====== */
+.status-box {
+  width: 100%;
+  max-width: 560px;
+  max-height: 100%;
+  overflow-y: auto;
+  background: rgba(13,43,69,0.85);
+  border: 3px solid var(--dourado);
+  border-radius: 18px;
+  padding: 22px 20px;
+}
+.status-box h2 { font-size: 24px; color: var(--dourado); margin-bottom: 6px; }
+.status-xp { font-size: 15px; color: #cfe3f2; }
+.status-pontos { font-size: 17px; font-weight: bold; color: var(--dourado); margin: 8px 0 16px; }
+
+.status-atributos { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.attr-linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.attr-emoji { font-size: 28px; }
+.attr-nome {
+  flex: 1;
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+}
+.attr-nome small { font-size: 12px; font-weight: normal; color: #cfe3f2; }
+.attr-valor { font-size: 15px; font-weight: bold; min-width: 46px; text-align: right; }
+.attr-mais {
+  background: var(--dourado);
+  color: var(--escuro);
+  border: none;
+  border-radius: 10px;
+  width: 40px; height: 40px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.attr-mais:active { transform: scale(0.9); }
+.attr-mais:disabled { background: #6b7a86; color: #c3ccd3; cursor: not-allowed; }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .attr-emoji { font-size: 22px; }
+  .status-box h2 { font-size: 20px; }
+}
