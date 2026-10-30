@@ -17,6 +17,7 @@
       <button class="btn btn-grande" onclick="irParaHistoria()">▶ COMEÇAR</button>
       <br>
       <button class="btn btn-album" onclick="abrirAlbum('tela-titulo')">🏅 Álbum de Conquistas</button>
+      <button class="btn btn-album" onclick="abrirLoja('tela-titulo')">🛒 Loja</button>
       <button class="btn-som" onclick="alternarSom()" title="Ligar/desligar som">🔊</button>
     </div>
     <div class="ondas"></div>
@@ -95,6 +96,7 @@
       <button id="btn-status-batalha" class="btn-status" onclick="abrirStatus('tela-batalha')">
         📊 Status <span id="pontos-badge" class="pontos-badge" style="display:none;">0</span>
       </button>
+      <button class="btn-status" onclick="abrirLoja('tela-batalha')">🛒 Loja</button>
       <button class="btn-som" onclick="alternarSom()" title="Ligar/desligar som">🔊</button>
     </div>
 
@@ -135,6 +137,16 @@
       <button class="btn btn-acao btn-defender" onclick="acaoDefender()">🛡️ Defender</button>
       <button id="btn-ron" class="btn btn-acao btn-ron" onclick="acaoRon()">🐉 Ron: Cuspir Fogo!</button>
       <button id="btn-magia" class="btn btn-acao btn-magia" onclick="acaoDefenderMagia()" style="display:none;">🔮 Defender da Magia</button>
+      <button id="btn-mochila" class="btn btn-acao btn-mochila" onclick="abrirMochila()">🎒 Itens</button>
+    </div>
+
+    <!-- painel da mochila (poções) -->
+    <div id="mochila-painel" class="mochila-painel" style="display:none;">
+      <div class="mochila-box">
+        <h3>🎒 Suas Poções</h3>
+        <div id="mochila-lista" class="mochila-lista"></div>
+        <button class="btn" onclick="fecharMochila()">Fechar</button>
+      </div>
     </div>
   </section>
 
@@ -169,6 +181,22 @@
       <button class="btn btn-grande" onclick="fecharStatus()">⬅ Voltar</button>
       <br>
       <button class="btn btn-reset" onclick="resetarProgresso()">🔄 Recomeçar do zero</button>
+    </div>
+  </section>
+
+  <!-- ============ TELA 9: LOJA ============ -->
+  <section id="tela-loja" class="tela">
+    <div class="loja-box">
+      <h2>🛒 Loja do Herói</h2>
+      <p id="loja-moedas" class="loja-moedas">🪙 0 moedas</p>
+
+      <h3 class="loja-secao">🧪 Poções (usar na batalha)</h3>
+      <div id="loja-pocoes" class="loja-grade"></div>
+
+      <h3 class="loja-secao">🛡️ Equipamentos (bônus permanente)</h3>
+      <div id="loja-equipamentos" class="loja-grade"></div>
+
+      <button class="btn btn-grande" onclick="fecharLoja()">⬅ Voltar</button>
     </div>
   </section>
 

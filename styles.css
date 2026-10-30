@@ -715,3 +715,98 @@ canvas {
   0%, 100% { box-shadow: 0 5px 0 #512e5f, 0 0 0 0 rgba(155,89,182,0.9); }
   50% { box-shadow: 0 5px 0 #512e5f, 0 0 16px 6px rgba(187,107,217,0.9); }
 }
+
+/* ====== LOJA ====== */
+.loja-box {
+  width: 100%;
+  max-width: 640px;
+  max-height: 100%;
+  overflow-y: auto;
+  background: rgba(13,43,69,0.9);
+  border: 3px solid var(--dourado);
+  border-radius: 18px;
+  padding: 22px 18px;
+}
+.loja-box h2 { font-size: 26px; color: var(--dourado); }
+.loja-moedas {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--dourado);
+  background: rgba(0,0,0,0.3);
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+.loja-secao {
+  font-size: 17px;
+  text-align: left;
+  margin: 16px 0 8px;
+  color: #ffe9b8;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 4px;
+}
+.loja-grade { display: flex; flex-direction: column; gap: 10px; }
+.loja-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.loja-card.loja-tem { opacity: 0.6; border: 2px solid var(--dourado); }
+.loja-emoji { font-size: 32px; flex-shrink: 0; }
+.loja-info { flex: 1; text-align: left; }
+.loja-nome { font-size: 15px; font-weight: bold; }
+.loja-desc { font-size: 12px; color: #cfe3f2; }
+.loja-qtd { color: var(--dourado); font-size: 13px; }
+.loja-comprar {
+  background: var(--dourado);
+  color: var(--escuro);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.loja-comprar:active { transform: scale(0.94); }
+.loja-comprar:disabled { background: #6b7a86; color: #c3ccd3; cursor: not-allowed; }
+
+/* ====== MOCHILA (poções na batalha) ====== */
+.btn-mochila { background: #52b788; box-shadow: 0 5px 0 #2d6a4f; }
+.mochila-painel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+  padding: 20px;
+}
+.mochila-box {
+  background: rgba(13,43,69,0.98);
+  border: 3px solid var(--dourado);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+.mochila-box h3 { color: var(--dourado); margin-bottom: 14px; }
+.mochila-lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.mochila-item {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid var(--dourado);
+  color: var(--branco);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.mochila-item:active { transform: scale(0.96); }
+.mochila-vazia { color: #cfe3f2; font-style: italic; padding: 12px; }

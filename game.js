@@ -23,6 +23,11 @@ const jogador = {
     especial: 0, // +efeito do especial (cura/poder)
     hp: 0,       // +vida máxima
   },
+
+  // --- SISTEMA DE LOJA ---
+  moedas: 0,         // dinheiro 🪙
+  inventario: {},    // poções compradas: { pocao_vida: 2, ... }
+  equipados: {},     // equipamentos comprados (bônus permanente): { espada: true, ... }
 };
 
 // quanto cada ponto de atributo vale
@@ -48,6 +53,139 @@ const PROFISSOES = {
   medico:     { icone: "🧑‍⚕️", nome: "Médico",     desc: "Cura os feridos e mantém a equipe viva durante a aventura.", ataque: 15, especial: { nome: "Cura!", emoji: "💊", cura: 35, texto: "aplica um remédio e recupera a própria vida" } },
   cozinheiro: { icone: "🧑‍🍳", nome: "Cozinheiro", desc: "Cozinha pratos que dão energia e força para toda a equipe!", ataque: 17, especial: { nome: "Prato Quente!", emoji: "🍲", cura: 25, dano: 12, texto: "joga um prato fervendo: dá dano e ainda recupera energia" } },
 };
+
+// ============================================
+//  LOJA, MOEDAS, POÇÕES E EQUIPAMENTOS 🛒💰
+// ============================================
+
+// POÇÕES — itens que o jogador USA na batalha (acabam depois de usar)
+const POCOES = {
+  pocao_vida:    { emoji: "❤️", nome: "Poção de Vida",     preco: 30, desc: "Recupera 60 de vida na batalha." },
+  pocao_super:   { emoji: "💖", nome: "Super Poção",       preco: 60, desc: "Recupera 150 de vida na batalha." },
+  pocao_ron:     { emoji: "⚡", nome: "Energia do Ron",    preco: 25, desc: "Deixa o Ron pronto pra cuspir fogo na hora." },
+  pocao_forca:   { emoji: "💪", nome: "Poção de Força",    preco: 40, desc: "Seu próximo ataque causa o DOBRO de dano!" },
+};
+
+// EQUIPAMENTOS — compra uma vez e ganha bônus PRA SEMPRE
+const EQUIPAMENTOS = {
+  espada:    { emoji: "⚔️", nome: "Espada Afiada",      preco: 80,  bonus: "forca", valor: 8,  desc: "+8 de dano no ataque (permanente)." },
+  escudo:    { emoji: "🛡️", nome: "Escudo de Ferro",    preco: 90,  bonus: "hp",    valor: 40, desc: "+40 de vida máxima (permanente)." },
+  amuleto:   { emoji: "📿", nome: "Amuleto Mágico",     preco: 120, bonus: "dano",  valor: 12, desc: "+12 de dano no especial (permanente)." },
+  coroa:     { emoji: "👑", nome: "Coroa do Herói",     preco: 200, bonus: "hp",    valor: 100, desc: "+100 de vida máxima (permanente)!" },
+};
+
+// ganhar moedas
+function ganharMoedas(qtd) {
+  jogador.moedas += qtd;
+  salvarLoja();
+  atualizarHudNivel();
+}
+
+function salvarLoja() {
+  localStorage.setItem("ilhas_loja", JSON.stringify({
+    moedas: jogador.moedas,
+    inventario: jogador.inventario,
+    equipados: jogador.equipados,
+  }));
+}
+
+function carregarLoja() {
+  const salvo = JSON.parse(localStorage.getItem("ilhas_loja") || "null");
+  if (salvo) {
+    jogador.moedas = salvo.moedas ?? 0;
+    jogador.inventario = salvo.inventario ?? {};
+    jogador.equipados = salvo.equipados ?? {};
+  }
+}
+
+// soma os bônus dos equipamentos aos atributos
+function bonusEquipamento(tipoAttr) {
+  let total = 0;
+  for (const [id, eq] of Object.entries(EQUIPAMENTOS)) {
+    if (jogador.equipados[id] && eq.bonus === tipoAttr) total += eq.valor;
+  }
+  return total;
+}
+
+// --- TELA DA LOJA ---
+function abrirLoja(voltarPara) {
+  window._lojaVoltar = voltarPara || "tela-titulo";
+  renderLoja();
+  mostrarTela("tela-loja");
+}
+
+function fecharLoja() {
+  mostrarTela(window._lojaVoltar || "tela-titulo");
+}
+
+function renderLoja() {
+  document.getElementById("loja-moedas").textContent = `🪙 ${jogador.moedas} moedas`;
+
+  // poções
+  const gradePocoes = document.getElementById("loja-pocoes");
+  gradePocoes.innerHTML = "";
+  for (const [id, p] of Object.entries(POCOES)) {
+    const qtd = jogador.inventario[id] || 0;
+    const podeComprar = jogador.moedas >= p.preco;
+    const card = document.createElement("div");
+    card.className = "loja-card";
+    card.innerHTML = `
+      <div class="loja-emoji">${p.emoji}</div>
+      <div class="loja-info">
+        <div class="loja-nome">${p.nome} ${qtd > 0 ? `<span class="loja-qtd">x${qtd}</span>` : ""}</div>
+        <div class="loja-desc">${p.desc}</div>
+      </div>
+      <button class="loja-comprar" ${podeComprar ? "" : "disabled"} onclick="comprarPocao('${id}')">
+        🪙 ${p.preco}
+      </button>`;
+    gradePocoes.appendChild(card);
+  }
+
+  // equipamentos
+  const gradeEquip = document.getElementById("loja-equipamentos");
+  gradeEquip.innerHTML = "";
+  for (const [id, e] of Object.entries(EQUIPAMENTOS)) {
+    const jaTem = jogador.equipados[id];
+    const podeComprar = jogador.moedas >= e.preco && !jaTem;
+    const card = document.createElement("div");
+    card.className = "loja-card" + (jaTem ? " loja-tem" : "");
+    card.innerHTML = `
+      <div class="loja-emoji">${e.emoji}</div>
+      <div class="loja-info">
+        <div class="loja-nome">${e.nome}</div>
+        <div class="loja-desc">${e.desc}</div>
+      </div>
+      <button class="loja-comprar" ${podeComprar ? "" : "disabled"} onclick="comprarEquipamento('${id}')">
+        ${jaTem ? "✅ Comprado" : "🪙 " + e.preco}
+      </button>`;
+    gradeEquip.appendChild(card);
+  }
+}
+
+function comprarPocao(id) {
+  const p = POCOES[id];
+  if (jogador.moedas < p.preco) return;
+  jogador.moedas -= p.preco;
+  jogador.inventario[id] = (jogador.inventario[id] || 0) + 1;
+  salvarLoja();
+  if (typeof SONS !== "undefined") SONS.conquista();
+  renderLoja();
+  atualizarHudNivel();
+}
+
+function comprarEquipamento(id) {
+  const e = EQUIPAMENTOS[id];
+  if (jogador.moedas < e.preco || jogador.equipados[id]) return;
+  jogador.moedas -= e.preco;
+  jogador.equipados[id] = true;
+  calcularVidaMax();                       // aplica bônus de HP na hora
+  if (jogador.vida < jogador.vidaMax) jogador.vida = jogador.vidaMax;
+  salvarLoja();
+  if (typeof SONS !== "undefined") SONS.vitoria();
+  renderLoja();
+  atualizarHudNivel();
+  if (document.getElementById("tela-batalha").classList.contains("ativa")) atualizarBarras();
+}
 
 // ============================================
 //  SISTEMA DE NÍVEL E ATRIBUTOS (RPG) 📊
@@ -88,17 +226,19 @@ function garantirAttr() {
   jogador.attr.hp = jogador.attr.hp || 0;
 }
 
-// calcula a vida máxima atual (base + bônus de HP)
+// calcula a vida máxima atual (base + bônus de HP + equipamentos)
 function calcularVidaMax() {
   garantirAttr();
-  jogador.vidaMax = 100 + jogador.attr.hp * VALOR_ATTR.hp;
+  jogador.vidaMax = 100 + jogador.attr.hp * VALOR_ATTR.hp + bonusEquipamento("hp");
 }
 
-// dano do ataque normal (base da profissão + bônus de força)
+// dano do ataque normal (base da profissão + bônus de força + equipamentos + poção de força)
 function danoAtaqueNormal() {
   garantirAttr();
   const base = PROFISSOES[jogador.profissao].ataque;
-  return base + jogador.attr.forca * VALOR_ATTR.forca + Math.floor(Math.random() * 8);
+  let dano = base + jogador.attr.forca * VALOR_ATTR.forca + bonusEquipamento("forca") + Math.floor(Math.random() * 8);
+  if (jogador._forcaDobrada) { dano *= 2; jogador._forcaDobrada = false; }
+  return dano;
 }
 
 // ganhar XP (e subir de nível se encher)
@@ -131,7 +271,7 @@ function avisarSubiuNivel() {
 // mostra nível/XP no topo da batalha
 function atualizarHudNivel() {
   const el = document.getElementById("hud-nivel");
-  if (el) el.textContent = `Nv.${jogador.nivel}  XP ${jogador.xp}/${jogador.xpProximo}`;
+  if (el) el.textContent = `Nv.${jogador.nivel}  XP ${jogador.xp}/${jogador.xpProximo}  🪙${jogador.moedas}`;
   const badge = document.getElementById("pontos-badge");
   if (badge) {
     badge.textContent = jogador.pontos;
@@ -183,13 +323,17 @@ function renderStatus() {
 
 // apaga o progresso salvo e volta o herói pro nível 1 (resolve save bugado)
 function resetarProgresso() {
-  if (!confirm("Tem certeza? Isso zera nível, XP e pontos do herói.")) return;
+  if (!confirm("Tem certeza? Isso zera nível, XP, pontos, moedas e itens do herói.")) return;
   localStorage.removeItem("ilhas_heroi");
+  localStorage.removeItem("ilhas_loja");
   jogador.nivel = 1;
   jogador.xp = 0;
   jogador.xpProximo = 50;
   jogador.pontos = 0;
   jogador.attr = { forca: 0, dano: 0, especial: 0, hp: 0 };
+  jogador.moedas = 0;
+  jogador.inventario = {};
+  jogador.equipados = {};
   calcularVidaMax();
   jogador.vida = jogador.vidaMax;
   atualizarHudNivel();
@@ -301,7 +445,7 @@ function mostrarTela(id) {
 
   // a música de fundo só toca na batalha; nas outras telas ela para
   // (Status é exceção: continua na batalha por baixo, então não paramos)
-  if (typeof pararMusica === "function" && id !== "tela-batalha" && id !== "tela-status") {
+  if (typeof pararMusica === "function" && id !== "tela-batalha" && id !== "tela-status" && id !== "tela-loja") {
     pararMusica();
   }
 }
@@ -388,6 +532,7 @@ function comecarAventura() {
   mostrarTela("tela-ilha");
 
   carregarHeroi();      // carrega nível/XP/pontos salvos (se houver)
+  carregarLoja();       // carrega moedas, poções e equipamentos
   calcularVidaMax();    // aplica bônus de HP
   jogador.vida = jogador.vidaMax;
 
@@ -637,8 +782,8 @@ function acaoEspecial() {
   let msg = `${jogador.nome} usou ${esp.nome} ${esp.emoji} — ${esp.texto}!`;
 
   if (esp.dano) {
-    // dano base do especial + bônus de Dano
-    const dano = esp.dano + jogador.attr.dano * VALOR_ATTR.dano;
+    // dano base do especial + bônus de Dano + equipamentos
+    const dano = esp.dano + jogador.attr.dano * VALOR_ATTR.dano + bonusEquipamento("dano");
     inimigoAtual.vida -= dano;
     tremer("batalha-inimigo-sprite");
   }
@@ -658,6 +803,53 @@ function acaoDefender() {
   jogador._defendendo = true;
   escreverLog(`${jogador.nome} ergueu a guarda! O próximo golpe vai doer menos. 🛡️`);
   fimDoTurnoJogador();
+}
+
+// --- MOCHILA: usar poções durante a batalha ---
+function abrirMochila() {
+  const painel = document.getElementById("mochila-painel");
+  const lista = document.getElementById("mochila-lista");
+  lista.innerHTML = "";
+
+  const temItens = Object.entries(jogador.inventario).some(([id, q]) => q > 0);
+  if (!temItens) {
+    lista.innerHTML = `<p class="mochila-vazia">Você não tem poções. Compre na 🛒 Loja!</p>`;
+  } else {
+    for (const [id, qtd] of Object.entries(jogador.inventario)) {
+      if (qtd <= 0) continue;
+      const p = POCOES[id];
+      const item = document.createElement("button");
+      item.className = "mochila-item";
+      item.onclick = () => usarPocao(id);
+      item.innerHTML = `${p.emoji} ${p.nome} <span class="loja-qtd">x${qtd}</span>`;
+      lista.appendChild(item);
+    }
+  }
+  painel.style.display = "flex";
+}
+
+function fecharMochila() {
+  document.getElementById("mochila-painel").style.display = "none";
+}
+
+function usarPocao(id) {
+  if (!turnoDoJogador) { fecharMochila(); return; }
+  if (!jogador.inventario[id] || jogador.inventario[id] <= 0) return;
+
+  const p = POCOES[id];
+  jogador.inventario[id]--;
+  fecharMochila();
+
+  if (id === "pocao_vida")  { jogador.vida = Math.min(jogador.vidaMax, jogador.vida + 60);  escreverLog(`❤️ Você usou ${p.nome} e recuperou 60 de vida!`); }
+  if (id === "pocao_super") { jogador.vida = Math.min(jogador.vidaMax, jogador.vida + 150); escreverLog(`💖 Você usou ${p.nome} e recuperou 150 de vida!`); }
+  if (id === "pocao_ron")   { ronEnergia = RON_MAX; escreverLog(`⚡ ${p.nome}! O Ron está pronto pra cuspir fogo! 🐉`); }
+  if (id === "pocao_forca") { jogador._forcaDobrada = true; escreverLog(`💪 ${p.nome}! Seu próximo ataque causará o DOBRO de dano!`); }
+
+  if (typeof SONS !== "undefined") SONS.especial();
+  salvarLoja();
+  atualizarBarras();
+  // usar poção NÃO gasta o turno (é uma ação rápida) — o jogador continua jogando
+  ligarBotoes(true);
 }
 
 // 🔮 Defender da Magia — protege contra o feitiço do Rei Bruxo
@@ -767,7 +959,7 @@ function acaoRon() {
   SONS.ron();
   ronEnergia = 0; // zera e precisa recarregar
 
-  const dano = 18 + Math.floor(Math.random() * 12);
+  const dano = 35 + Math.floor(Math.random() * 20); // fogo do Ron bem mais forte! 🔥
   inimigoAtual.vida -= dano;
   tremer("batalha-inimigo-sprite");
   pulaRon();
@@ -795,6 +987,11 @@ function inimigoDerrotado() {
   // ganha XP: chefão dá bem mais que capanga (XP reforçado pra subir de nível mais rápido)
   const xpGanho = eraChefao ? 60 : 28;
   ganharXp(xpGanho);
+
+  // ganha MOEDAS 🪙 (chefão dá bem mais)
+  const moedasGanhas = eraChefao ? 50 : 15;
+  ganharMoedas(moedasGanhas);
+  escreverLog(`💰 Você ganhou ${moedasGanhas} moedas!`);
 
   desbloquear("primeira_luta");           // primeira vitória em combate
 
@@ -863,6 +1060,9 @@ function jogadorDerrotado() {
 
 function mostrarVitoriaCapitulo() {
   SONS.vitoria();
+  // bônus de moedas por concluir o capítulo 🪙
+  const bonusMoedas = 40 + capituloAtual * 20;
+  ganharMoedas(bonusMoedas);
   // conquista do capítulo concluído
   desbloquear(["capitulo1", "capitulo2", "capitulo3", "capitulo4", "capitulo5", "final"][capituloAtual]);
 
