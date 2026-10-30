@@ -187,3 +187,59 @@ body {
   .historia-texto { font-size: 18px; }
   .prof-icone { font-size: 36px; }
 }
+
+/* ====== AVISO PARA GIRAR O CELULAR ====== */
+#aviso-girar {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--escuro);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.aviso-girar-box { max-width: 300px; }
+.aviso-girar-icone {
+  font-size: 70px;
+  animation: girar-dica 1.8s ease-in-out infinite;
+}
+@keyframes girar-dica {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(90deg); }
+}
+.aviso-girar-box p { font-size: 20px; margin-top: 14px; line-height: 1.5; }
+
+/* Mostra o aviso só em celular na vertical (retrato) */
+@media (max-width: 920px) and (orientation: portrait) {
+  #aviso-girar { display: flex; }
+}
+
+/* ====== AJUSTES PARA HORIZONTAL (PAISAGEM) ====== */
+@media (orientation: landscape) and (max-height: 500px) {
+  .jogo-titulo { font-size: 40px; }
+  .emblema { font-size: 56px; }
+
+  .historia-box { padding: 18px 24px; }
+  .historia-texto { font-size: 18px; min-height: 90px; }
+
+  /* criar personagem em duas colunas lado a lado */
+  .criar-box { max-width: 760px; padding: 16px 22px; }
+  .criar-box h2 { font-size: 24px; margin-bottom: 8px; }
+  .label { margin: 8px 0 4px; }
+  .profissoes { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .prof { padding: 10px 6px; }
+  .prof-icone { font-size: 34px; }
+  .prof-descricao { min-height: 30px; margin-top: 8px; }
+  .btn { padding: 10px 22px; font-size: 16px; margin-top: 8px; }
+  .btn-grande { font-size: 18px; padding: 12px 26px; }
+
+  /* ilha: cena mais larga e baixa */
+  .ilha-chao { width: 420px; height: 90px; }
+  .heroi-sprite { font-size: 48px; top: -56px; }
+  .palmeira { font-size: 44px; top: -42px; }
+  .fogueira { font-size: 30px; top: -30px; }
+  .ilha-fala { padding: 12px 20px; }
+  .ilha-fala p { font-size: 16px; min-height: 36px; }
+}

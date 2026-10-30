@@ -115,10 +115,31 @@ let olhadas = 0;
 const FALAS_EXPLORAR = [
   "Há uma fogueira ainda acesa — alguém esteve aqui recentemente...",
   "Ao longe, dá pra ver outras ilhas. Em uma delas, uma fumaça escura sobe ao céu. 😨",
-  "Sua equipe precisa de um barco para seguir viagem. Hora de se preparar para a primeira ilha!",
+  "Olha! Um pequeno barco de madeira encalhado na areia. Dá pra consertar e navegar!",
 ];
 
 function explorarIlha() {
-  document.getElementById("ilha-dialogo").textContent = FALAS_EXPLORAR[olhadas % FALAS_EXPLORAR.length];
-  olhadas++;
+  const dialogo = document.getElementById("ilha-dialogo");
+  const btnOlhar = document.getElementById("btn-olhar");
+  const btnViajar = document.getElementById("btn-viajar");
+
+  if (olhadas < FALAS_EXPLORAR.length) {
+    dialogo.textContent = FALAS_EXPLORAR[olhadas];
+    olhadas++;
+  }
+
+  // Quando terminou de explorar tudo, libera a viagem e esconde o "olhar em volta"
+  if (olhadas >= FALAS_EXPLORAR.length) {
+    btnOlhar.style.display = "none";
+    btnViajar.style.display = "inline-block";
+  }
+}
+
+// Botão de viajar para a primeira ilha
+function viajarPrimeiraIlha() {
+  const dialogo = document.getElementById("ilha-dialogo");
+  dialogo.textContent =
+    `${jogador.nome} e sua equipe embarcam no pequeno barco rumo à primeira ilha... 🚢 (Em breve: a primeira batalha contra os capangas do chefão!)`;
+  document.getElementById("heroi-sprite").textContent = "⛵";
+  document.getElementById("btn-viajar").style.display = "none";
 }

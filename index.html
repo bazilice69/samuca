@@ -78,9 +78,18 @@
 
     <div class="ilha-fala">
       <p id="ilha-dialogo"></p>
-      <button class="btn" onclick="explorarIlha()">Olhar em volta 👀</button>
+      <button id="btn-olhar" class="btn" onclick="explorarIlha()">Olhar em volta 👀</button>
+      <button id="btn-viajar" class="btn" onclick="viajarPrimeiraIlha()" style="display:none;">🚢 Viajar para a 1ª ilha</button>
     </div>
   </section>
+
+  <!-- Aviso para virar o celular na horizontal -->
+  <div id="aviso-girar">
+    <div class="aviso-girar-box">
+      <div class="aviso-girar-icone">📱↔️</div>
+      <p>Vire o celular na <b>horizontal</b> para jogar melhor!</p>
+    </div>
+  </div>
 
   <script src="game.js"></script>
 </body>
