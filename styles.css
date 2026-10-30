@@ -577,3 +577,12 @@ canvas {
 @media (orientation: landscape) and (max-height: 500px) {
   .prof-sprite { width: 54px; height: 54px; }
 }
+
+/* ====== BOTÃO RECOMEÇAR ====== */
+.btn-reset {
+  background: #e74c3c;
+  color: #fff;
+  box-shadow: 0 4px 0 #a93226;
+  font-size: 15px;
+  padding: 10px 20px;
+}

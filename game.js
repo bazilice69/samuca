@@ -65,21 +65,38 @@ function salvarHeroi() {
 function carregarHeroi() {
   const salvo = JSON.parse(localStorage.getItem("ilhas_heroi") || "null");
   if (salvo) {
-    jogador.nivel = salvo.nivel;
-    jogador.xp = salvo.xp;
-    jogador.xpProximo = salvo.xpProximo;
-    jogador.pontos = salvo.pontos;
-    jogador.attr = salvo.attr;
+    jogador.nivel = salvo.nivel ?? 1;
+    jogador.xp = salvo.xp ?? 0;
+    jogador.xpProximo = salvo.xpProximo ?? 50;
+    jogador.pontos = salvo.pontos ?? 0;
+    // garante que todos os atributos existam (protege saves antigos)
+    jogador.attr = {
+      forca: salvo.attr?.forca ?? 0,
+      dano: salvo.attr?.dano ?? 0,
+      especial: salvo.attr?.especial ?? 0,
+      hp: salvo.attr?.hp ?? 0,
+    };
   }
+}
+
+// garante que o objeto de atributos sempre exista (protege saves antigos/quebrados)
+function garantirAttr() {
+  if (!jogador.attr) jogador.attr = {};
+  jogador.attr.forca = jogador.attr.forca || 0;
+  jogador.attr.dano = jogador.attr.dano || 0;
+  jogador.attr.especial = jogador.attr.especial || 0;
+  jogador.attr.hp = jogador.attr.hp || 0;
 }
 
 // calcula a vida máxima atual (base + bônus de HP)
 function calcularVidaMax() {
+  garantirAttr();
   jogador.vidaMax = 100 + jogador.attr.hp * VALOR_ATTR.hp;
 }
 
 // dano do ataque normal (base da profissão + bônus de força)
 function danoAtaqueNormal() {
+  garantirAttr();
   const base = PROFISSOES[jogador.profissao].ataque;
   return base + jogador.attr.forca * VALOR_ATTR.forca + Math.floor(Math.random() * 8);
 }
@@ -162,6 +179,22 @@ function renderStatus() {
     `;
     lista.appendChild(linha);
   }
+}
+
+// apaga o progresso salvo e volta o herói pro nível 1 (resolve save bugado)
+function resetarProgresso() {
+  if (!confirm("Tem certeza? Isso zera nível, XP e pontos do herói.")) return;
+  localStorage.removeItem("ilhas_heroi");
+  jogador.nivel = 1;
+  jogador.xp = 0;
+  jogador.xpProximo = 50;
+  jogador.pontos = 0;
+  jogador.attr = { forca: 0, dano: 0, especial: 0, hp: 0 };
+  calcularVidaMax();
+  jogador.vida = jogador.vidaMax;
+  atualizarHudNivel();
+  renderStatus();
+  alert("Pronto! Herói recomeçado no Nível 1. 🔄");
 }
 
 function distribuirPonto(chave) {
@@ -465,12 +498,12 @@ function atualizarBarras() {
   // vida do herói
   const pHeroi = Math.max(0, (jogador.vida / jogador.vidaMax) * 100);
   document.getElementById("barra-heroi").style.width = pHeroi + "%";
-  document.getElementById("vida-heroi-txt").textContent = `${Math.max(0, jogador.vida)}/${jogador.vidaMax}`;
+  document.getElementById("vida-heroi-txt").textContent = `${Math.max(0, Math.round(jogador.vida))}/${jogador.vidaMax}`;
 
   // vida do inimigo
   const pIni = Math.max(0, (inimigoAtual.vida / inimigoAtual.vidaMax) * 100);
   document.getElementById("barra-inimigo").style.width = pIni + "%";
-  document.getElementById("vida-inimigo-txt").textContent = `${Math.max(0, inimigoAtual.vida)}/${inimigoAtual.vidaMax}`;
+  document.getElementById("vida-inimigo-txt").textContent = `${Math.max(0, Math.round(inimigoAtual.vida))}/${inimigoAtual.vidaMax}`;
 }
 
 function escreverLog(txt) {
@@ -487,9 +520,9 @@ function acaoAtacar() {
   if (!turnoDoJogador) return;
   const dano = danoAtaqueNormal(); // base da profissão + bônus de Força
   inimigoAtual.vida -= dano;
+  atualizarBarras();               // atualiza a barra ANTES da animação (garante que mostre)
   tremer("batalha-inimigo-sprite");
   escreverLog(`${jogador.nome} atacou e causou ${dano} de dano! 💥`);
-  atualizarBarras();
   fimDoTurnoJogador();
 }
 
@@ -667,6 +700,7 @@ function mostrarVitoriaCapitulo() {
 // efeitinho de tremer quando leva/dá dano
 function tremer(id) {
   const el = document.getElementById(id);
+  if (!el) return;              // evita travar se o elemento não existir
   el.classList.remove("tremer");
   void el.offsetWidth; // reinicia a animação
   el.classList.add("tremer");
