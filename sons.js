@@ -119,7 +119,7 @@ function alternarSom() {
     // se estiver numa batalha, retoma a música da ilha
     const emBatalha = document.getElementById("tela-batalha")?.classList.contains("ativa");
     if (emBatalha && typeof capituloAtual !== "undefined") {
-      const nome = ["selva", "pirata", "assombrado"][capituloAtual];
+      const nome = ["selva", "pirata", "assombrado", "deserto"][capituloAtual];
       const lembrar = musicaAtual; musicaAtual = null; tocarMusica(nome || lembrar);
     }
   } else {
@@ -179,6 +179,13 @@ const MUSICAS = {
     tipo: "triangle",
     volume: 0.07,
     notas: ["A3","_","C4","_","E4","D4","C4","_","A3","_","F3","_","E3","_","A3","_"],
+  },
+  // 🏜️ DESERTO — misteriosa, estilo oásis do oriente
+  deserto: {
+    passo: 0.24,
+    tipo: "square",
+    volume: 0.06,
+    notas: ["D4","E4","F4","E4","D4","F4","G4","F4","E4","G4","A4","G4","F4","E4","D4","_"],
   },
 };
 

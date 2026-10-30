@@ -232,6 +232,66 @@ const SPRITES = {
     "................",
   ],
 
+  // 🦂 ESCORPIÃO — bicho do deserto marrom/laranja
+  escorpiao: [
+    "................",
+    "..K..........K..",
+    "..KK........KK..",
+    "...OK......KO...",
+    "....OKOOOOOKO...",
+    "...OOOOOOOOOOO..",
+    "..OOKOOOOOKOOO..",
+    "..OOOOOOOOOOOO..",
+    "..OOOOOOOOOOOO..",
+    "...OOOOOOOOOO...",
+    "..O.OO.OO.OO.O..",
+    ".O..O..O..O..O..",
+    "...........KOOO.",
+    "..........KOOK..",
+    "..........KK....",
+    "................",
+  ],
+
+  // 🧟 MÚMIA — enfaixada bege
+  mumia: [
+    "................",
+    ".....LLLLL......",
+    "....LLLLLLL.....",
+    "...LLLLLLLLL....",
+    "...LLKLLLKLL....",
+    "...LLKLLLKLL....",
+    "...LLLLLLLLL....",
+    "...LwwwwwwwL....",
+    "..LLLwwwwwLLL...",
+    "..LwwLwwwLwwL...",
+    "..LLwwwwwwwLL...",
+    "..LwwLwwwLwwL...",
+    "..LLLwwwwwLLL...",
+    "..LwL.....LwL...",
+    "..LLL.....LLL...",
+    "................",
+  ],
+
+  // 👑 CHEFÃO DESERTO — faraó dourado
+  chefe_farao: [
+    ".....YYYYY......",
+    "....YKKKKKY.....",
+    "...YKBBBBBKY....",
+    "...YKBYYYBKY....",
+    "...KSSSSSSSK....",
+    "...KSKSSKSSK....",
+    "...KSSSSSSSK....",
+    "...KSSKKKSSSK...",
+    "...YKSSSSSSKY...",
+    "..YYKYYYYKYYY...",
+    "..YKKYYYYYKKY...",
+    "..YKBBBBBBBKY...",
+    "..YKBYBYBYBKY...",
+    "..YKK.....KKY...",
+    "..YYK.....KYY...",
+    "...KK.....KK....",
+  ],
+
   // 🏴‍☠️ CHEFÃO PIRATA — capitão caveira
   chefe_pirata: [
     "................",

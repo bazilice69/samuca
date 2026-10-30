@@ -232,6 +232,9 @@ const CONQUISTAS = {
   assombrado:     { emoji: "👻", titulo: "Caça-Fantasmas",         desc: "Você enfrentou as assombrações da terceira ilha." },
   chefao3:        { emoji: "👹", titulo: "Rei das Trevas",         desc: "Você derrotou Sombrax, o Senhor das Trevas!" },
   capitulo3:      { emoji: "🌟", titulo: "Capítulo 3 Concluído",  desc: "A Ilha Mal-Assombrada foi purificada!" },
+  deserto:        { emoji: "🦂", titulo: "Sobrevivente do Deserto", desc: "Você enfrentou os perigos da quarta ilha." },
+  chefao4:        { emoji: "👑", titulo: "Conquistador das Areias", desc: "Você derrotou o Faraó Rá!" },
+  capitulo4:      { emoji: "🏜️", titulo: "Capítulo 4 Concluído",  desc: "A Ilha Deserta foi conquistada!" },
 };
 
 // guarda quais conquistas já foram desbloqueadas (salva no celular)
@@ -460,6 +463,15 @@ const CAPITULOS = [
       { tipo: "chefao",  nome: "Sombrax, o Senhor das Trevas", sprite: "chefe_assombrado", emoji: "👹", vidaMax: 210, ataque: 30 },
     ],
   },
+  {
+    titulo: "Capítulo 4 — A Ilha Deserta 🏜️",
+    tema: "tema-deserto",
+    inimigos: [
+      { tipo: "capanga", nome: "Escorpião Venenoso", sprite: "escorpiao", emoji: "🦂", vidaMax: 120, ataque: 24 },
+      { tipo: "capanga", nome: "Múmia Amaldiçoada", sprite: "mumia", emoji: "🧟", vidaMax: 145, ataque: 28 },
+      { tipo: "chefao",  nome: "Faraó Rá, o Rei das Areias", sprite: "chefe_farao", emoji: "👑", vidaMax: 250, ataque: 34 },
+    ],
+  },
 ];
 
 let inimigoAtual = null;
@@ -494,11 +506,11 @@ function iniciarCapitulo(num) {
 
   // aplica o clima/cor de fundo do capítulo na arena
   const arena = document.querySelector(".batalha-arena");
-  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado");
+  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto");
   arena.classList.add(CAPITULOS[num].tema);
 
-  // toca a música de fundo da ilha (selva / pirata / assombrado)
-  const nomeMusica = ["selva", "pirata", "assombrado"][num];
+  // toca a música de fundo da ilha (selva / pirata / assombrado / deserto)
+  const nomeMusica = ["selva", "pirata", "assombrado", "deserto"][num];
   tocarMusica(nomeMusica);
 
   prepararInimigo();
@@ -684,7 +696,8 @@ function inimigoDerrotado() {
   // conquistas que dependem do capítulo
   if (capituloAtual === 1) desbloquear("pirata");
   if (capituloAtual === 2) desbloquear("assombrado");
-  if (eraChefao) desbloquear(["chefao1", "chefao2", "chefao3"][capituloAtual]);
+  if (capituloAtual === 3) desbloquear("deserto");
+  if (eraChefao) desbloquear(["chefao1", "chefao2", "chefao3", "chefao4"][capituloAtual]);
 
   SONS.inimigoMorto();
   indiceInimigo++;
@@ -712,7 +725,7 @@ function jogadorDerrotado() {
 function mostrarVitoriaCapitulo() {
   SONS.vitoria();
   // conquista do capítulo concluído
-  desbloquear(["capitulo1", "capitulo2", "capitulo3"][capituloAtual]);
+  desbloquear(["capitulo1", "capitulo2", "capitulo3", "capitulo4"][capituloAtual]);
 
   mostrarTela("tela-fim");
   const temProximo = capituloAtual + 1 < CAPITULOS.length;
@@ -724,7 +737,8 @@ function mostrarVitoriaCapitulo() {
   const mensagens = [
     `${jogador.nome} derrotou o chefão da Ilha da Selva! Mas o mar guarda novos perigos... 🏴‍☠️`,
     `${jogador.nome} afundou o Capitão Caveira e libertou a Ilha dos Piratas! ⚓ Mas uma ilha sombria surge na névoa... 👻`,
-    `${jogador.nome} purificou a Ilha Mal-Assombrada e derrotou Sombrax! 🌟 A equipe está cada vez mais perto de casa.`,
+    `${jogador.nome} purificou a Ilha Mal-Assombrada e derrotou Sombrax! 🌟 Ao longe, dunas de areia brilham ao sol... 🏜️`,
+    `${jogador.nome} derrotou o Faraó Rá e dominou a Ilha Deserta! 🏜️👑 A equipe está cada vez mais perto de voltar pra casa!`,
   ];
   document.getElementById("fim-texto").textContent = mensagens[capituloAtual];
 
