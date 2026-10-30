@@ -487,11 +487,19 @@ function iniciarCapitulo(num) {
 
   calcularVidaMax();              // aplica bônus de HP dos atributos
 
-  // no 1º capítulo começa com vida cheia; nos seguintes, recupera parte da vida
+  // no 1º capítulo começa com vida cheia; nos seguintes, descansa e recupera MUITA vida
   if (num === 0) {
     jogador.vida = jogador.vidaMax;
   } else {
-    jogador.vida = Math.min(jogador.vidaMax, jogador.vida + 40);
+    // recupera 70% da vida máxima (a equipe descansa entre as ilhas)
+    const cura = Math.round(jogador.vidaMax * 0.7);
+    jogador.vida = Math.max(0, jogador.vida); // nunca parte de vida negativa
+    jogador.vida = Math.min(jogador.vidaMax, jogador.vida + cura);
+    // garante um mínimo decente pra não começar a ilha quase morrendo
+    if (jogador.vida < jogador.vidaMax * 0.6) {
+      jogador.vida = Math.round(jogador.vidaMax * 0.6);
+    }
+    jogador._descansou = true; // pra mostrar a mensagem de descanso
   }
 
   atualizarHudNivel();
@@ -531,9 +539,16 @@ function prepararInimigo() {
 
   atualizarBarras();
 
-  const intro = inimigoAtual.tipo === "chefao"
+  let intro = inimigoAtual.tipo === "chefao"
     ? `⚠️ O CHEFÃO apareceu! ${inimigoAtual.nome} ruge furioso!`
     : `Um ${inimigoAtual.nome} bloqueia o caminho!`;
+
+  // na 1ª luta de um capítulo (que não seja o primeiro), avisa que a equipe descansou
+  if (indiceInimigo === 0 && capituloAtual > 0 && jogador._descansou) {
+    intro = `😴 A equipe descansou e recuperou energia! ❤️  ` + intro;
+    jogador._descansou = false;
+  }
+
   escreverLog(intro);
 
   ligarBotoes(true);
