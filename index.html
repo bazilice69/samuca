@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ilhas Perdidas — A Aventura dos 4</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ TELA 1: TÍTULO ============ -->
+  <section id="tela-titulo" class="tela ativa">
+    <div class="titulo-box">
+      <div class="emblema">🏝️</div>
+      <h1 class="jogo-titulo">ILHAS PERDIDAS</h1>
+      <p class="jogo-subtitulo">A Aventura dos 4</p>
+      <button class="btn btn-grande" onclick="irParaHistoria()">▶ COMEÇAR</button>
+    </div>
+    <div class="ondas"></div>
+  </section>
+
+  <!-- ============ TELA 2: HISTÓRIA ============ -->
+  <section id="tela-historia" class="tela">
+    <div class="historia-box">
+      <p id="historia-texto" class="historia-texto"></p>
+      <button id="btn-historia" class="btn" onclick="proximaHistoria()">Continuar ▶</button>
+    </div>
+  </section>
+
+  <!-- ============ TELA 3: CRIAR PERSONAGEM ============ -->
+  <section id="tela-criar" class="tela">
+    <div class="criar-box">
+      <h2>Crie seu Herói</h2>
+
+      <label class="label">Nome do herói:</label>
+      <input id="input-nome" class="input-nome" type="text" placeholder="Digite um nome..." maxlength="14" />
+
+      <label class="label">Escolha a profissão:</label>
+      <div class="profissoes">
+        <button class="prof" data-prof="policial" onclick="escolherProfissao('policial', this)">
+          <span class="prof-icone">👮</span>
+          <span class="prof-nome">Policial</span>
+        </button>
+        <button class="prof" data-prof="bombeiro" onclick="escolherProfissao('bombeiro', this)">
+          <span class="prof-icone">🚒</span>
+          <span class="prof-nome">Bombeiro</span>
+        </button>
+        <button class="prof" data-prof="medico" onclick="escolherProfissao('medico', this)">
+          <span class="prof-icone">🧑‍⚕️</span>
+          <span class="prof-nome">Médico</span>
+        </button>
+        <button class="prof" data-prof="cozinheiro" onclick="escolherProfissao('cozinheiro', this)">
+          <span class="prof-icone">🧑‍🍳</span>
+          <span class="prof-nome">Cozinheiro</span>
+        </button>
+      </div>
+
+      <p id="prof-descricao" class="prof-descricao">Toque numa profissão para ver o que ela faz.</p>
+
+      <button id="btn-criar" class="btn btn-grande" onclick="comecarAventura()" disabled>🚀 COMEÇAR AVENTURA</button>
+    </div>
+  </section>
+
+  <!-- ============ TELA 4: ILHA INICIAL ============ -->
+  <section id="tela-ilha" class="tela">
+    <div class="ilha-topo">
+      <span id="ilha-info-heroi" class="ilha-info"></span>
+    </div>
+
+    <div class="ilha-cena">
+      <div class="ilha-chao">
+        <div class="palmeira">🌴</div>
+        <div id="heroi-sprite" class="heroi-sprite">👮</div>
+        <div class="fogueira">🔥</div>
+      </div>
+      <div class="ilha-mar"></div>
+    </div>
+
+    <div class="ilha-fala">
+      <p id="ilha-dialogo"></p>
+      <button class="btn" onclick="explorarIlha()">Olhar em volta 👀</button>
+    </div>
+  </section>
+
+  <script src="game.js"></script>
+</body>
+</html>
