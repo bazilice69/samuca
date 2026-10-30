@@ -83,6 +83,56 @@
     </div>
   </section>
 
+  <!-- ============ TELA 5: BATALHA ============ -->
+  <section id="tela-batalha" class="tela">
+    <div class="batalha-topo">
+      <span id="cap-titulo" class="cap-titulo">Capítulo 1</span>
+    </div>
+
+    <div class="batalha-arena">
+      <!-- Inimigo -->
+      <div class="lado-inimigo">
+        <div class="combatente">
+          <span id="batalha-inimigo-nome" class="comb-nome">Inimigo</span>
+          <div class="barra-fundo"><div id="barra-inimigo" class="barra barra-inimigo"></div></div>
+          <span id="vida-inimigo-txt" class="vida-txt">0/0</span>
+        </div>
+        <div id="batalha-inimigo-sprite" class="sprite sprite-inimigo">👹</div>
+      </div>
+
+      <div class="versus">⚔️</div>
+
+      <!-- Herói -->
+      <div class="lado-heroi">
+        <div id="batalha-heroi-sprite" class="sprite sprite-heroi">🧑‍🍳</div>
+        <div class="combatente">
+          <span id="batalha-heroi-nome" class="comb-nome">Herói</span>
+          <div class="barra-fundo"><div id="barra-heroi" class="barra barra-heroi"></div></div>
+          <span id="vida-heroi-txt" class="vida-txt">100/100</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="batalha-log-box">
+      <p id="batalha-log">...</p>
+    </div>
+
+    <div class="batalha-acoes">
+      <button class="btn btn-acao" onclick="acaoAtacar()">⚔️ Atacar</button>
+      <button class="btn btn-acao btn-especial" onclick="acaoEspecial()">✨ Especial</button>
+      <button class="btn btn-acao btn-defender" onclick="acaoDefender()">🛡️ Defender</button>
+    </div>
+  </section>
+
+  <!-- ============ TELA 6: FIM / VITÓRIA ============ -->
+  <section id="tela-fim" class="tela">
+    <div class="fim-box">
+      <h2 id="fim-titulo">Fim</h2>
+      <p id="fim-texto"></p>
+      <button id="btn-fim" class="btn btn-grande">Continuar</button>
+    </div>
+  </section>
+
   <!-- Aviso para virar o celular na horizontal -->
   <div id="aviso-girar">
     <div class="aviso-girar-box">
