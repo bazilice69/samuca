@@ -647,6 +647,26 @@ canvas {
   top: 16px; right: 18px;
   font-size: 26px;
 }
+.batalha-arena.tema-castelo {
+  background:
+    radial-gradient(circle at 50% 15%, rgba(142,68,173,0.35), transparent 55%),
+    linear-gradient(180deg, #2c1338 0%, #3d1f52 50%, #1a0d2e 100%);
+}
+.batalha-arena.tema-castelo::before {
+  content: "🏰";
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  opacity: 0.9;
+}
+.batalha-arena.tema-castelo::after {
+  content: "🔥";
+  position: absolute;
+  bottom: 12px; left: 20px;
+  font-size: 24px;
+  animation: flutuar 1.5s ease-in-out infinite;
+}
 /* lua assustadora na ilha assombrada */
 .batalha-arena.tema-assombrado::before {
   content: "🌕";

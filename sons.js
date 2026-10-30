@@ -119,7 +119,7 @@ function alternarSom() {
     // se estiver numa batalha, retoma a música da ilha
     const emBatalha = document.getElementById("tela-batalha")?.classList.contains("ativa");
     if (emBatalha && typeof capituloAtual !== "undefined") {
-      const nome = ["selva", "pirata", "assombrado", "deserto", "tempestade"][capituloAtual];
+      const nome = ["selva", "pirata", "assombrado", "deserto", "tempestade", "castelo"][capituloAtual];
       const lembrar = musicaAtual; musicaAtual = null; tocarMusica(nome || lembrar);
     }
   } else {
@@ -193,6 +193,13 @@ const MUSICAS = {
     tipo: "sawtooth",
     volume: 0.05,
     notas: ["E4","E4","G4","E4","A4","G4","E4","D4","E4","G4","B4","A4","G4","E4","D4","_"],
+  },
+  // 🏰 CASTELO FINAL — épica e grandiosa (batalha contra o Rei Bruxo)
+  castelo: {
+    passo: 0.22,
+    tipo: "square",
+    volume: 0.06,
+    notas: ["C4","G4","C5","B4","C5","G4","E4","G4","A4","F4","D4","F4","G4","E4","C4","_"],
   },
 };
 

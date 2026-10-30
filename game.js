@@ -108,7 +108,7 @@ function ganharXp(qtd) {
   while (jogador.xp >= jogador.xpProximo) {
     jogador.xp -= jogador.xpProximo;
     jogador.nivel++;
-    jogador.pontos += 2; // 2 pontos por nível
+    jogador.pontos += 3; // 3 pontos por nível (reforço pra encarar os chefões difíceis)
     jogador.xpProximo = Math.round(jogador.xpProximo * 1.4); // cada nível exige mais
     subiu = true;
   }
@@ -238,6 +238,9 @@ const CONQUISTAS = {
   tempestade:     { emoji: "⚡", titulo: "Desafiador dos Céus",    desc: "Você enfrentou a fúria da quinta ilha." },
   chefao5:        { emoji: "🌩️", titulo: "Domador de Trovões",     desc: "Você derrotou Zoltrão, o Deus do Trovão!" },
   capitulo5:      { emoji: "🏆", titulo: "Capítulo 5 Concluído",  desc: "A Ilha das Tempestades foi conquistada!" },
+  castelo:        { emoji: "🏰", titulo: "Invasor do Castelo",     desc: "Você invadiu o castelo do Rei Bruxo." },
+  rei:            { emoji: "🧙‍♂️", titulo: "Herói Lendário",        desc: "Você derrotou o Rei Bruxo e salvou o mundo!" },
+  final:          { emoji: "👑", titulo: "A Aventura Termina",     desc: "A equipe voltou para o seu mundo. FIM! 🎉" },
 };
 
 // guarda quais conquistas já foram desbloqueadas (salva no celular)
@@ -484,6 +487,15 @@ const CAPITULOS = [
       { tipo: "chefao",  nome: "Zoltrão, o Deus do Trovão", sprite: "chefe_trovao", emoji: "⚡", vidaMax: 300, ataque: 40 },
     ],
   },
+  {
+    titulo: "Capítulo FINAL — O Castelo do Rei Bruxo 🏰",
+    tema: "tema-castelo",
+    inimigos: [
+      { tipo: "capanga", nome: "Guarda Real", sprite: "guarda", emoji: "🛡️", vidaMax: 200, ataque: 36 },
+      { tipo: "capanga", nome: "Guarda Real Veterano", sprite: "guarda", emoji: "⚔️", vidaMax: 230, ataque: 40 },
+      { tipo: "chefao",  nome: "Rei Barba-Branca, o Bruxo Supremo", sprite: "rei_bruxo", emoji: "🧙‍♂️", vidaMax: 380, ataque: 46 },
+    ],
+  },
 ];
 
 let inimigoAtual = null;
@@ -526,11 +538,11 @@ function iniciarCapitulo(num) {
 
   // aplica o clima/cor de fundo do capítulo na arena
   const arena = document.querySelector(".batalha-arena");
-  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto", "tema-tempestade");
+  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto", "tema-tempestade", "tema-castelo");
   arena.classList.add(CAPITULOS[num].tema);
 
   // toca a música de fundo da ilha
-  const nomeMusica = ["selva", "pirata", "assombrado", "deserto", "tempestade"][num];
+  const nomeMusica = ["selva", "pirata", "assombrado", "deserto", "tempestade", "castelo"][num];
   tocarMusica(nomeMusica);
 
   prepararInimigo();
@@ -715,8 +727,8 @@ function inimigoDerrotado() {
   const eraChefao = inimigoAtual.tipo === "chefao";
   const lista = CAPITULOS[capituloAtual].inimigos;
 
-  // ganha XP: chefão dá bem mais que capanga
-  const xpGanho = eraChefao ? 40 : 18;
+  // ganha XP: chefão dá bem mais que capanga (XP reforçado pra subir de nível mais rápido)
+  const xpGanho = eraChefao ? 60 : 28;
   ganharXp(xpGanho);
 
   desbloquear("primeira_luta");           // primeira vitória em combate
@@ -726,7 +738,8 @@ function inimigoDerrotado() {
   if (capituloAtual === 2) desbloquear("assombrado");
   if (capituloAtual === 3) desbloquear("deserto");
   if (capituloAtual === 4) desbloquear("tempestade");
-  if (eraChefao) desbloquear(["chefao1", "chefao2", "chefao3", "chefao4", "chefao5"][capituloAtual]);
+  if (capituloAtual === 5) desbloquear("castelo");
+  if (eraChefao) desbloquear(["chefao1", "chefao2", "chefao3", "chefao4", "chefao5", "rei"][capituloAtual]);
 
   SONS.inimigoMorto();
   indiceInimigo++;
@@ -786,10 +799,22 @@ function jogadorDerrotado() {
 function mostrarVitoriaCapitulo() {
   SONS.vitoria();
   // conquista do capítulo concluído
-  desbloquear(["capitulo1", "capitulo2", "capitulo3", "capitulo4", "capitulo5"][capituloAtual]);
+  desbloquear(["capitulo1", "capitulo2", "capitulo3", "capitulo4", "capitulo5", "final"][capituloAtual]);
+
+  const temProximo = capituloAtual + 1 < CAPITULOS.length;
+  const ehFinal = !temProximo; // último capítulo = fim da aventura
 
   mostrarTela("tela-fim");
-  const temProximo = capituloAtual + 1 < CAPITULOS.length;
+
+  // ===== FINAL DA AVENTURA (venceu o Rei Bruxo) =====
+  if (ehFinal) {
+    document.getElementById("fim-titulo").textContent = "🎉 VOCÊ VENCEU O JOGO! 🎉";
+    document.getElementById("fim-texto").textContent =
+      `${jogador.nome} derrotou o Rei Bruxo Barba-Branca! 🧙‍♂️💥 O feitiço que separava o mundo foi quebrado, e a equipe — com o Ron 🐉 — finalmente voltou para o seu mundo! Você é um HERÓI LENDÁRIO! 🏆👑  FIM.`;
+    document.getElementById("btn-fim").textContent = "🏅 Ver todas as Conquistas";
+    document.getElementById("btn-fim").onclick = () => abrirAlbum("tela-fim");
+    return;
+  }
 
   document.getElementById("fim-titulo").textContent =
     `🏆 Capítulo ${capituloAtual + 1} Concluído!`;
@@ -800,19 +825,16 @@ function mostrarVitoriaCapitulo() {
     `${jogador.nome} afundou o Capitão Caveira e libertou a Ilha dos Piratas! ⚓ Mas uma ilha sombria surge na névoa... 👻`,
     `${jogador.nome} purificou a Ilha Mal-Assombrada e derrotou Sombrax! 🌟 Ao longe, dunas de areia brilham ao sol... 🏜️`,
     `${jogador.nome} derrotou o Faraó Rá e dominou a Ilha Deserta! 🏜️👑 Mas no horizonte, raios cortam o céu escuro... ⚡`,
-    `${jogador.nome} derrotou Zoltrão e venceu a Ilha das Tempestades! ⚡🏆 Que aventura! A equipe está cada vez mais perto de voltar pro seu mundo!`,
+    `${jogador.nome} derrotou Zoltrão e venceu a Ilha das Tempestades! ⚡🏆 Mas uma última ilha surge... com um castelo sombrio! 🏰`,
   ];
   document.getElementById("fim-texto").textContent = mensagens[capituloAtual];
 
-  if (temProximo) {
-    const prox = capituloAtual + 1;
-    document.getElementById("btn-fim").textContent = `➡️ Ir para o Capítulo ${prox + 1}`;
-    document.getElementById("btn-fim").onclick = () => iniciarCapitulo(prox);
-  } else {
-    // acabou o conteúdo disponível por enquanto
-    document.getElementById("btn-fim").textContent = "🏅 Ver Álbum de Conquistas";
-    document.getElementById("btn-fim").onclick = () => abrirAlbum("tela-fim");
-  }
+  const prox = capituloAtual + 1;
+  const ehUltimoAntesDoFinal = prox === CAPITULOS.length - 1;
+  document.getElementById("btn-fim").textContent = ehUltimoAntesDoFinal
+    ? "⚔️ Enfrentar o Rei Bruxo!"
+    : `➡️ Ir para o Capítulo ${prox + 1}`;
+  document.getElementById("btn-fim").onclick = () => iniciarCapitulo(prox);
 }
 
 // efeitinho de tremer quando leva/dá dano

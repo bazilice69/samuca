@@ -356,6 +356,46 @@ const SPRITES = {
     ".......V........",
   ],
 
+  // 🧙 GUARDA REAL — soldado do rei (armadura roxa)
+  guarda: [
+    "................",
+    ".....KKKKK......",
+    "....KLLLLLK.....",
+    "....KLLLLLK.....",
+    "....KSSSSSK.....",
+    "....SKSSKSS.....",
+    "....SSSSSSS.....",
+    "...KPPPPPPPK....",
+    "..KPPLLLLLPPPK..",
+    "..KPPLPPPLPPPK..",
+    "..KPPPPPPPPPK...",
+    "...KPPPPPPPK....",
+    "...KPP.KK.PK....",
+    "...KSK....KS....",
+    "...KKK....KK....",
+    "................",
+  ],
+
+  // 🧙‍♂️ REI BRUXO — velho com coroa e barba branca gigante (CHEFÃO FINAL)
+  rei_bruxo: [
+    ".....YVYVY......",
+    "....YYYYYYY.....",
+    "....KKKKKKK.....",
+    "...KSSSSSSSK....",
+    "...KSKSSKS SK...",
+    "...KSSSSSSSK....",
+    "...WKSSSSSKW....",
+    "..WWWWKKKWWWW...",
+    ".WWWWWWWWWWWWW..",
+    ".WWWWWWWWWWWWW..",
+    "..WWWPPPPPWWWW..",
+    "..PWWWPPPWWWWP..",
+    ".PPPWWWWWWWPPP..",
+    ".PPP.WWWWW.PPP..",
+    ".PP..WW.WW..PP..",
+    ".....KK.KK......",
+  ],
+
   // 🏴‍☠️ CHEFÃO PIRATA — capitão caveira
   chefe_pirata: [
     "................",
