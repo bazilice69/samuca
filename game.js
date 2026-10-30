@@ -245,6 +245,7 @@ function desbloquear(id) {
 }
 
 function mostrarPopupConquista(c) {
+  if (typeof SONS !== "undefined") SONS.conquista();
   const pop = document.getElementById("popup-conquista");
   pop.querySelector(".pop-emoji").textContent = c.emoji;
   pop.querySelector(".pop-titulo").textContent = c.titulo;
@@ -303,6 +304,9 @@ const HISTORIA = [
 let passoHistoria = 0;
 
 function irParaHistoria() {
+  garantirAudio();     // liga o áudio no primeiro toque do usuário
+  carregarPrefSom();
+  SONS.clique();
   mostrarTela("tela-historia");
   passoHistoria = 0;
   escreverHistoria();
@@ -537,6 +541,7 @@ function ligarBotoes(ligado) {
 // --- AÇÕES DO JOGADOR ---
 function acaoAtacar() {
   if (!turnoDoJogador) return;
+  SONS.atacar();
   const dano = danoAtaqueNormal(); // base da profissão + bônus de Força
   inimigoAtual.vida -= dano;
   atualizarBarras();               // atualiza a barra ANTES da animação (garante que mostre)
@@ -547,6 +552,7 @@ function acaoAtacar() {
 
 function acaoEspecial() {
   if (!turnoDoJogador) return;
+  SONS.especial();
   const esp = PROFISSOES[jogador.profissao].especial;
   let msg = `${jogador.nome} usou ${esp.nome} ${esp.emoji} — ${esp.texto}!`;
 
@@ -568,6 +574,7 @@ function acaoEspecial() {
 
 function acaoDefender() {
   if (!turnoDoJogador) return;
+  SONS.defender();
   jogador._defendendo = true;
   escreverLog(`${jogador.nome} ergueu a guarda! O próximo golpe vai doer menos. 🛡️`);
   fimDoTurnoJogador();
@@ -593,6 +600,7 @@ function turnoDoInimigo() {
     jogador._defendendo = false;
   }
   jogador.vida -= dano;
+  SONS.dano();
   tremer("batalha-heroi-sprite");
   escreverLog(`${inimigoAtual.nome} atacou e causou ${dano} de dano! 😣`);
   atualizarBarras();
@@ -629,6 +637,7 @@ function atualizarBotaoRon() {
 // Ron cospe fogo no inimigo (acionado pelo jogador)
 function acaoRon() {
   if (!turnoDoJogador || ronEnergia < RON_CUSTO) return;
+  SONS.ron();
   ronEnergia = 0; // zera e precisa recarregar
 
   const dano = 18 + Math.floor(Math.random() * 12);
@@ -667,6 +676,7 @@ function inimigoDerrotado() {
   if (capituloAtual === 2) desbloquear("assombrado");
   if (eraChefao) desbloquear(["chefao1", "chefao2", "chefao3"][capituloAtual]);
 
+  SONS.inimigoMorto();
   indiceInimigo++;
 
   if (indiceInimigo < lista.length) {
@@ -679,6 +689,7 @@ function inimigoDerrotado() {
 }
 
 function jogadorDerrotado() {
+  SONS.derrota();
   const num = capituloAtual;
   mostrarTela("tela-fim");
   document.getElementById("fim-titulo").textContent = "Você foi derrotado... 💀";
@@ -689,6 +700,7 @@ function jogadorDerrotado() {
 }
 
 function mostrarVitoriaCapitulo() {
+  SONS.vitoria();
   // conquista do capítulo concluído
   desbloquear(["capitulo1", "capitulo2", "capitulo3"][capituloAtual]);
 

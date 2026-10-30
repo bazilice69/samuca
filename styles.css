@@ -619,3 +619,21 @@ canvas {
   animation: flutuar 2.5s ease-in-out infinite;
 }
 .batalha-arena { position: relative; }
+
+/* ====== BOTÃO DE SOM ====== */
+.btn-som {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 6px 10px;
+  cursor: pointer;
+  margin-left: 6px;
+}
+.btn-som:active { transform: scale(0.9); }
+/* na tela de título fica mais destacado */
+#tela-titulo .btn-som {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+}
