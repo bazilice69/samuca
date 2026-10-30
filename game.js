@@ -638,7 +638,7 @@ const CAPITULOS = [
     inimigos: [
       { tipo: "capanga", nome: "Guarda Real", sprite: "guarda", emoji: "🛡️", vidaMax: 200, ataque: 36 },
       { tipo: "capanga", nome: "Guarda Real Veterano", sprite: "guarda", emoji: "⚔️", vidaMax: 230, ataque: 40 },
-      { tipo: "chefao",  nome: "Rei Barba-Branca, o Bruxo Supremo", sprite: "rei_bruxo", emoji: "🧙‍♂️", vidaMax: 1000, ataque: 50, magico: true },
+      { tipo: "chefao",  nome: "Rei Barba-Branca, o Bruxo Supremo", sprite: "rei_bruxo", emoji: "🧙‍♂️", vidaMax: 900, ataque: 50, magico: true },
     ],
   },
 ];
