@@ -719,12 +719,44 @@ function inimigoDerrotado() {
   indiceInimigo++;
 
   if (indiceInimigo < lista.length) {
-    escreverLog(`${inimigoAtual.nome} foi derrotado! 🎉 Mas vem mais um...`);
-    setTimeout(prepararInimigo, 1400);
+    const proximoEhChefao = lista[indiceInimigo].tipo === "chefao";
+    if (proximoEhChefao) {
+      // DESCANSO antes do chefão: regenera vida (e o cozinheiro cozinha!)
+      descansarAntesDoChefao();
+    } else {
+      escreverLog(`${inimigoAtual.nome} foi derrotado! 🎉 Mas vem mais um...`);
+      setTimeout(prepararInimigo, 1400);
+    }
   } else {
     // venceu o capítulo
     mostrarVitoriaCapitulo();
   }
+}
+
+// Momento de descanso antes de enfrentar o chefão da ilha
+function descansarAntesDoChefao() {
+  ligarBotoes(false);
+
+  const ehCozinheiro = jogador.profissao === "cozinheiro";
+
+  // regenera vida: cozinheiro cura um pouco a mais (comida boa!)
+  const porcentagem = ehCozinheiro ? 0.75 : 0.5;
+  const antes = jogador.vida;
+  jogador.vida = Math.min(jogador.vidaMax, jogador.vida + Math.round(jogador.vidaMax * porcentagem));
+  const curou = jogador.vida - antes;
+
+  if (ehCozinheiro) {
+    escreverLog(`🧑‍🍳 ${jogador.nome} prepara um almoço quentinho para a equipe! 🍲 A comida recupera ${curou} de vida! ❤️`);
+    desbloquear("primeiro_almoco");   // conquista do primeiro almoço!
+    SONS.especial();
+  } else {
+    escreverLog(`😴 A equipe descansa e recupera as forças antes do grande desafio! ❤️ (+${curou} de vida)`);
+    SONS.conquista();
+  }
+  atualizarBarras();
+
+  // depois do descanso, o chefão aparece
+  setTimeout(prepararInimigo, 2600);
 }
 
 function jogadorDerrotado() {
