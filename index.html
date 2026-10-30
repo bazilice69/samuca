@@ -15,6 +15,8 @@
       <h1 class="jogo-titulo">ILHAS PERDIDAS</h1>
       <p class="jogo-subtitulo">A Aventura dos 4</p>
       <button class="btn btn-grande" onclick="irParaHistoria()">▶ COMEÇAR</button>
+      <br>
+      <button class="btn btn-album" onclick="abrirAlbum('tela-titulo')">🏅 Álbum de Conquistas</button>
     </div>
     <div class="ondas"></div>
   </section>
@@ -125,6 +127,7 @@
       <button class="btn btn-acao" onclick="acaoAtacar()">⚔️ Atacar</button>
       <button class="btn btn-acao btn-especial" onclick="acaoEspecial()">✨ Especial</button>
       <button class="btn btn-acao btn-defender" onclick="acaoDefender()">🛡️ Defender</button>
+      <button id="btn-ron" class="btn btn-acao btn-ron" onclick="acaoRon()">🐉 Ron: Cuspir Fogo!</button>
     </div>
   </section>
 
@@ -136,6 +139,26 @@
       <button id="btn-fim" class="btn btn-grande">Continuar</button>
     </div>
   </section>
+
+  <!-- ============ TELA 7: ÁLBUM DE CONQUISTAS ============ -->
+  <section id="tela-album" class="tela">
+    <div class="album-box">
+      <h2>🏅 Álbum de Conquistas</h2>
+      <p id="album-contador" class="album-contador">0 de 0 conquistas</p>
+      <div id="album-grade" class="album-grade"></div>
+      <button class="btn btn-grande" onclick="fecharAlbum()">⬅ Voltar</button>
+    </div>
+  </section>
+
+  <!-- Popup que aparece ao ganhar uma conquista -->
+  <div id="popup-conquista" class="popup-conquista">
+    <div class="pop-emoji">🏅</div>
+    <div class="pop-textos">
+      <div class="pop-rotulo">Conquista desbloqueada!</div>
+      <div class="pop-titulo">Título</div>
+      <div class="pop-desc">Descrição</div>
+    </div>
+  </div>
 
   <!-- Aviso para virar o celular na horizontal -->
   <div id="aviso-girar">

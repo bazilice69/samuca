@@ -21,6 +21,67 @@ const PROFISSOES = {
 };
 
 // ============================================
+//  ÁLBUM DE CONQUISTAS 🏅
+// ============================================
+const CONQUISTAS = {
+  heroi_criado:   { emoji: "🎖️", titulo: "Nasce um Herói",        desc: "Você criou seu primeiro herói." },
+  conheceu_ron:   { emoji: "🐉", titulo: "Melhor Amigo",          desc: "A equipe encontrou o Ron, o mascote dragão." },
+  primeiro_almoco:{ emoji: "🍲", titulo: "Primeiro Almoço",       desc: "A equipe fez sua primeira refeição juntos!" },
+  primeira_luta:  { emoji: "⚔️", titulo: "Primeira Vitória",      desc: "Você derrotou seu primeiro capanga." },
+  ron_fogo:       { emoji: "🔥", titulo: "Cuspe de Fogo",         desc: "O Ron atacou um inimigo com fogo." },
+  chefao1:        { emoji: "🦍", titulo: "Caçador de Chefões",    desc: "Você derrotou o chefão da Ilha da Selva." },
+  capitulo1:      { emoji: "🏆", titulo: "Capítulo 1 Concluído",  desc: "A primeira ilha foi conquistada!" },
+};
+
+// guarda quais conquistas já foram desbloqueadas (salva no celular)
+let conquistasFeitas = JSON.parse(localStorage.getItem("ilhas_conquistas") || "[]");
+
+function desbloquear(id) {
+  if (conquistasFeitas.includes(id)) return; // já tem
+  conquistasFeitas.push(id);
+  localStorage.setItem("ilhas_conquistas", JSON.stringify(conquistasFeitas));
+  mostrarPopupConquista(CONQUISTAS[id]);
+}
+
+function mostrarPopupConquista(c) {
+  const pop = document.getElementById("popup-conquista");
+  pop.querySelector(".pop-emoji").textContent = c.emoji;
+  pop.querySelector(".pop-titulo").textContent = c.titulo;
+  pop.querySelector(".pop-desc").textContent = c.desc;
+  pop.classList.add("mostrar");
+  clearTimeout(window._popTimer);
+  window._popTimer = setTimeout(() => pop.classList.remove("mostrar"), 3200);
+}
+
+// monta a tela do álbum
+function abrirAlbum(voltarPara) {
+  window._albumVoltar = voltarPara || "tela-titulo";
+  const grade = document.getElementById("album-grade");
+  grade.innerHTML = "";
+
+  const total = Object.keys(CONQUISTAS).length;
+  document.getElementById("album-contador").textContent =
+    `${conquistasFeitas.length} de ${total} conquistas`;
+
+  for (const [id, c] of Object.entries(CONQUISTAS)) {
+    const feita = conquistasFeitas.includes(id);
+    const card = document.createElement("div");
+    card.className = "conq-card " + (feita ? "feita" : "bloqueada");
+    card.innerHTML = `
+      <div class="conq-emoji">${feita ? c.emoji : "🔒"}</div>
+      <div class="conq-titulo">${feita ? c.titulo : "???"}</div>
+      <div class="conq-desc">${feita ? c.desc : "Conquista bloqueada"}</div>
+    `;
+    grade.appendChild(card);
+  }
+  mostrarTela("tela-album");
+}
+
+function fecharAlbum() {
+  mostrarTela(window._albumVoltar || "tela-titulo");
+}
+
+// ============================================
 //  NAVEGAÇÃO ENTRE TELAS
 // ============================================
 function mostrarTela(id) {
@@ -112,6 +173,9 @@ function comecarAventura() {
 
   document.getElementById("ilha-dialogo").textContent =
     `${jogador.nome} abre os olhos numa pequena ilha deserta. De repente, um filhote de dragão 🐉 surge saltitando da areia! "Grrr... au!" — é o Ron, o mascote da equipe! 🎉`;
+
+  desbloquear("heroi_criado");
+  setTimeout(() => desbloquear("conheceu_ron"), 3600);
 }
 
 let olhadas = 0;
@@ -168,6 +232,7 @@ let turnoDoJogador = true;
 function iniciarCapitulo1() {
   indiceInimigo = 0;
   jogador.vida = jogador.vidaMax; // começa com vida cheia
+  ronEnergia = RON_MAX;           // Ron começa pronto
   mostrarTela("tela-batalha");
 
   const p = PROFISSOES[jogador.profissao];
@@ -214,6 +279,7 @@ function escreverLog(txt) {
 
 function ligarBotoes(ligado) {
   document.querySelectorAll(".btn-acao").forEach(b => b.disabled = !ligado);
+  atualizarBotaoRon(); // o botão do Ron tem regra própria (energia)
 }
 
 // --- AÇÕES DO JOGADOR ---
@@ -281,32 +347,45 @@ function turnoDoInimigo() {
     return;
   }
 
-  // O Ron (filhote de dragão) tem chance de ajudar! 🐉🔥
-  if (Math.random() < 0.4) {
-    setTimeout(ronAjuda, 1000);
-  } else {
-    // volta pro jogador
-    turnoDoJogador = true;
-    ligarBotoes(true);
-  }
-}
+  // o Ron recarrega um pouco de energia a cada turno
+  if (ronEnergia < RON_MAX) ronEnergia++;
+  atualizarBotaoRon();
 
-// Ron cospe fogo no inimigo
-function ronAjuda() {
-  const dano = 10 + Math.floor(Math.random() * 10);
-  inimigoAtual.vida -= dano;
-  tremer("batalha-inimigo-sprite");
-  pulaRon();
-  escreverLog(`🐉 Ron cospe fogo no inimigo! 🔥 Causou ${dano} de dano!`);
-  atualizarBarras();
-
-  if (inimigoAtual.vida <= 0) {
-    setTimeout(inimigoDerrotado, 900);
-    return;
-  }
   // volta pro jogador
   turnoDoJogador = true;
   ligarBotoes(true);
+}
+
+// --- RON: botão próprio controlado pelo jogador 🐉 ---
+let ronEnergia = 3;         // começa pronto
+const RON_MAX = 3;          // precisa de 3 de energia pra cuspir fogo
+const RON_CUSTO = 3;
+
+function atualizarBotaoRon() {
+  const btn = document.getElementById("btn-ron");
+  if (!btn) return;
+  const pronto = ronEnergia >= RON_CUSTO && turnoDoJogador;
+  btn.disabled = !pronto;
+  btn.textContent = pronto
+    ? "🐉 Ron: Cuspir Fogo!"
+    : `🐉 Ron (${ronEnergia}/${RON_MAX})`;
+}
+
+// Ron cospe fogo no inimigo (acionado pelo jogador)
+function acaoRon() {
+  if (!turnoDoJogador || ronEnergia < RON_CUSTO) return;
+  ronEnergia = 0; // zera e precisa recarregar
+
+  const dano = 18 + Math.floor(Math.random() * 12);
+  inimigoAtual.vida -= dano;
+  tremer("batalha-inimigo-sprite");
+  pulaRon();
+  escreverLog(`🐉 Ron cospe uma labareda de fogo! 🔥 Causou ${dano} de dano!`);
+  atualizarBarras();
+  atualizarBotaoRon();
+  desbloquear("ron_fogo");
+
+  fimDoTurnoJogador();
 }
 
 // faz o Ron pular quando ajuda
@@ -320,6 +399,10 @@ function pulaRon() {
 
 function inimigoDerrotado() {
   const eraChefao = inimigoAtual.tipo === "chefao";
+
+  desbloquear("primeira_luta");           // primeira vitória em combate
+  if (eraChefao) desbloquear("chefao1");  // derrotou o chefão
+
   indiceInimigo++;
 
   if (indiceInimigo < CAPITULO1.length) {
@@ -341,18 +424,13 @@ function jogadorDerrotado() {
 }
 
 function mostrarVitoriaCapitulo() {
+  desbloquear("capitulo1");
   mostrarTela("tela-fim");
   document.getElementById("fim-titulo").textContent = "🏆 Capítulo 1 Concluído!";
   document.getElementById("fim-texto").textContent =
     `${jogador.nome} derrotou o chefão da Ilha da Selva! A equipe está um passo mais perto de voltar pra casa. 🏝️`;
-  document.getElementById("btn-fim").textContent = "➡️ Continuar (próximo capítulo em breve)";
-  document.getElementById("btn-fim").onclick = () => {
-    escreverLog("Novos capítulos estão a caminho! 🚧");
-    mostrarTela("tela-batalha");
-    document.getElementById("batalha-log").textContent =
-      "Em breve: Capítulo 2! Volte depois para novas ilhas e chefões. 🌊";
-    ligarBotoes(false);
-  };
+  document.getElementById("btn-fim").textContent = "🏅 Ver Álbum de Conquistas";
+  document.getElementById("btn-fim").onclick = () => abrirAlbum("tela-fim");
 }
 
 // efeitinho de tremer quando leva/dá dano
