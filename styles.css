@@ -701,3 +701,17 @@ canvas {
   margin-top: 10px;
   padding: 8px 14px;
 }
+
+/* ====== BOTÃO DEFENDER DA MAGIA ====== */
+.btn-magia {
+  background: linear-gradient(135deg, #9b59b6, #6c3483);
+  color: #fff;
+  box-shadow: 0 5px 0 #512e5f;
+}
+.btn-magia.piscando-magia {
+  animation: piscar-magia 0.6s ease-in-out infinite;
+}
+@keyframes piscar-magia {
+  0%, 100% { box-shadow: 0 5px 0 #512e5f, 0 0 0 0 rgba(155,89,182,0.9); }
+  50% { box-shadow: 0 5px 0 #512e5f, 0 0 16px 6px rgba(187,107,217,0.9); }
+}

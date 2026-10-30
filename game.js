@@ -493,7 +493,7 @@ const CAPITULOS = [
     inimigos: [
       { tipo: "capanga", nome: "Guarda Real", sprite: "guarda", emoji: "🛡️", vidaMax: 200, ataque: 36 },
       { tipo: "capanga", nome: "Guarda Real Veterano", sprite: "guarda", emoji: "⚔️", vidaMax: 230, ataque: 40 },
-      { tipo: "chefao",  nome: "Rei Barba-Branca, o Bruxo Supremo", sprite: "rei_bruxo", emoji: "🧙‍♂️", vidaMax: 380, ataque: 46 },
+      { tipo: "chefao",  nome: "Rei Barba-Branca, o Bruxo Supremo", sprite: "rei_bruxo", emoji: "🧙‍♂️", vidaMax: 1000, ataque: 50, magico: true },
     ],
   },
 ];
@@ -558,6 +558,8 @@ function prepararInimigo() {
   inimigoAtual = { ...lista[indiceInimigo], vida: lista[indiceInimigo].vidaMax };
   turnoDoJogador = true;
   ronEnergia = RON_MAX;   // o Ron começa pronto a cada novo inimigo
+  jogador._protegidoMagia = false;
+  jogador._defendendo = false;
 
   desenharSprite(document.getElementById("batalha-inimigo-sprite"), inimigoAtual.sprite, 7);
   document.getElementById("batalha-inimigo-nome").textContent = inimigoAtual.nome;
@@ -598,6 +600,22 @@ function escreverLog(txt) {
 function ligarBotoes(ligado) {
   document.querySelectorAll(".btn-acao").forEach(b => b.disabled = !ligado);
   atualizarBotaoRon(); // o botão do Ron tem regra própria (energia)
+  atualizarBotaoMagia();
+}
+
+// mostra o botão "Defender da Magia" só quando o Rei está carregando um feitiço
+function atualizarBotaoMagia() {
+  const btn = document.getElementById("btn-magia");
+  if (!btn) return;
+  const carregando = inimigoAtual && inimigoAtual._carregandoMagia;
+  if (carregando && turnoDoJogador) {
+    btn.style.display = "inline-block";
+    btn.disabled = false;
+    btn.classList.add("piscando-magia");
+  } else {
+    btn.style.display = "none";
+    btn.classList.remove("piscando-magia");
+  }
 }
 
 // --- AÇÕES DO JOGADOR ---
@@ -642,6 +660,15 @@ function acaoDefender() {
   fimDoTurnoJogador();
 }
 
+// 🔮 Defender da Magia — protege contra o feitiço do Rei Bruxo
+function acaoDefenderMagia() {
+  if (!turnoDoJogador) return;
+  SONS.especial();
+  jogador._protegidoMagia = true;
+  escreverLog(`🔮🛡️ ${jogador.nome} conjura um escudo mágico de proteção! ✨`);
+  fimDoTurnoJogador();
+}
+
 function fimDoTurnoJogador() {
   turnoDoJogador = false;
   ligarBotoes(false);
@@ -656,6 +683,44 @@ function fimDoTurnoJogador() {
 }
 
 function turnoDoInimigo() {
+  // ===== MAGIA DO REI BRUXO =====
+  // se o inimigo estava CARREGANDO magia, agora ele a lança!
+  if (inimigoAtual._carregandoMagia) {
+    inimigoAtual._carregandoMagia = false;
+    let danoMagia = 70 + Math.floor(Math.random() * 20); // magia MUITO forte!
+    if (jogador._protegidoMagia) {
+      // o jogador se defendeu da magia: bloqueia quase tudo
+      danoMagia = Math.floor(danoMagia * 0.15);
+      jogador._protegidoMagia = false;
+      jogador.vida -= danoMagia;
+      SONS.defender();
+      escreverLog(`🔮✨ O escudo mágico protegeu ${jogador.nome}! A magia só causou ${danoMagia} de dano! 🛡️`);
+    } else {
+      jogador.vida -= danoMagia;
+      SONS.dano();
+      escreverLog(`🔮💥 ${inimigoAtual.nome} lançou uma MAGIA DEVASTADORA! ${danoMagia} de dano! 😱`);
+    }
+    tremer("batalha-heroi-sprite");
+    atualizarBarras();
+    if (jogador.vida <= 0) { setTimeout(jogadorDerrotado, 900); return; }
+    if (ronEnergia < RON_MAX) ronEnergia++;
+    turnoDoJogador = true;
+    ligarBotoes(true);
+    return;
+  }
+
+  // ===== o Rei Bruxo pode COMEÇAR a carregar uma magia =====
+  if (inimigoAtual.magico && Math.random() < 0.45) {
+    inimigoAtual._carregandoMagia = true;
+    jogador._defendendo = false;
+    escreverLog(`🔮⚠️ ${inimigoAtual.nome} está CARREGANDO uma magia poderosa! Use "🔮 Defender da Magia" AGORA!`);
+    // deixa o jogador agir (idealmente, se defender da magia)
+    turnoDoJogador = true;
+    ligarBotoes(true);
+    return;
+  }
+
+  // ===== ataque normal do inimigo =====
   let dano = inimigoAtual.ataque + Math.floor(Math.random() * 6);
   if (jogador._defendendo) {
     dano = Math.floor(dano / 2);
