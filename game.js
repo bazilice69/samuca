@@ -31,6 +31,9 @@ const CONQUISTAS = {
   ron_fogo:       { emoji: "🔥", titulo: "Cuspe de Fogo",         desc: "O Ron atacou um inimigo com fogo." },
   chefao1:        { emoji: "🦍", titulo: "Caçador de Chefões",    desc: "Você derrotou o chefão da Ilha da Selva." },
   capitulo1:      { emoji: "🏆", titulo: "Capítulo 1 Concluído",  desc: "A primeira ilha foi conquistada!" },
+  pirata:         { emoji: "🦜", titulo: "Mares Perigosos",       desc: "Você enfrentou os piratas da segunda ilha." },
+  chefao2:        { emoji: "🏴‍☠️", titulo: "Rei dos Mares",        desc: "Você derrotou o Capitão Caveira!" },
+  capitulo2:      { emoji: "⚓", titulo: "Capítulo 2 Concluído",  desc: "A Ilha dos Piratas foi conquistada!" },
 };
 
 // guarda quais conquistas já foram desbloqueadas (salva no celular)
@@ -215,37 +218,64 @@ function viajarPrimeiraIlha() {
 }
 
 // ============================================
-//  CAPÍTULO 1 — A ILHA DA SELVA
+//  CAPÍTULOS DA AVENTURA
 // ============================================
-
-// Lista de inimigos do capítulo 1 (2 capangas e depois o chefão)
-const CAPITULO1 = [
-  { tipo: "capanga", nome: "Capanga Fominha", emoji: "👹", vidaMax: 50,  ataque: 10 },
-  { tipo: "capanga", nome: "Capanga Brutamontes", emoji: "👺", vidaMax: 70,  ataque: 14 },
-  { tipo: "chefao",  nome: "GRRRAU, o Chefão da Selva", emoji: "🦍", vidaMax: 130, ataque: 20 },
+const CAPITULOS = [
+  {
+    titulo: "Capítulo 1 — A Ilha da Selva 🌴",
+    inimigos: [
+      { tipo: "capanga", nome: "Capanga Fominha", emoji: "👹", vidaMax: 50,  ataque: 10 },
+      { tipo: "capanga", nome: "Capanga Brutamontes", emoji: "👺", vidaMax: 70,  ataque: 14 },
+      { tipo: "chefao",  nome: "GRRRAU, o Chefão da Selva", emoji: "🦍", vidaMax: 130, ataque: 20 },
+    ],
+  },
+  {
+    titulo: "Capítulo 2 — A Ilha dos Piratas 🏴‍☠️",
+    inimigos: [
+      { tipo: "capanga", nome: "Pirata Perna-de-Pau", emoji: "🦜", vidaMax: 75,  ataque: 15 },
+      { tipo: "capanga", nome: "Pirata Barba-Negra", emoji: "🧔‍♂️", vidaMax: 95,  ataque: 19 },
+      { tipo: "chefao",  nome: "Capitão Caveira, o Rei dos Mares", emoji: "🏴‍☠️", vidaMax: 170, ataque: 26 },
+    ],
+  },
 ];
 
 let inimigoAtual = null;
 let indiceInimigo = 0;
+let capituloAtual = 0;
 let turnoDoJogador = true;
 
-function iniciarCapitulo1() {
+// inicia um capítulo pelo número (0 = cap 1, 1 = cap 2...)
+function iniciarCapitulo(num) {
+  capituloAtual = num;
   indiceInimigo = 0;
-  jogador.vida = jogador.vidaMax; // começa com vida cheia
   ronEnergia = RON_MAX;           // Ron começa pronto
+
+  // no 1º capítulo começa com vida cheia; nos seguintes, recupera parte da vida
+  if (num === 0) {
+    jogador.vida = jogador.vidaMax;
+  } else {
+    jogador.vida = Math.min(jogador.vidaMax, jogador.vida + 40);
+  }
+
   mostrarTela("tela-batalha");
 
   const p = PROFISSOES[jogador.profissao];
   document.getElementById("batalha-heroi-sprite").textContent = p.icone;
   document.getElementById("batalha-heroi-nome").textContent = jogador.nome;
 
-  document.getElementById("cap-titulo").textContent = "Capítulo 1 — A Ilha da Selva 🌴";
+  document.getElementById("cap-titulo").textContent = CAPITULOS[num].titulo;
 
   prepararInimigo();
 }
 
+// mantém o nome antigo funcionando (vem da viagem de barco)
+function iniciarCapitulo1() {
+  iniciarCapitulo(0);
+}
+
 function prepararInimigo() {
-  inimigoAtual = { ...CAPITULO1[indiceInimigo], vida: CAPITULO1[indiceInimigo].vidaMax };
+  const lista = CAPITULOS[capituloAtual].inimigos;
+  inimigoAtual = { ...lista[indiceInimigo], vida: lista[indiceInimigo].vidaMax };
   turnoDoJogador = true;
 
   document.getElementById("batalha-inimigo-sprite").textContent = inimigoAtual.emoji;
@@ -399,13 +429,17 @@ function pulaRon() {
 
 function inimigoDerrotado() {
   const eraChefao = inimigoAtual.tipo === "chefao";
+  const lista = CAPITULOS[capituloAtual].inimigos;
 
   desbloquear("primeira_luta");           // primeira vitória em combate
-  if (eraChefao) desbloquear("chefao1");  // derrotou o chefão
+
+  // conquistas que dependem do capítulo
+  if (capituloAtual === 1) desbloquear("pirata");
+  if (eraChefao) desbloquear(capituloAtual === 0 ? "chefao1" : "chefao2");
 
   indiceInimigo++;
 
-  if (indiceInimigo < CAPITULO1.length) {
+  if (indiceInimigo < lista.length) {
     escreverLog(`${inimigoAtual.nome} foi derrotado! 🎉 Mas vem mais um...`);
     setTimeout(prepararInimigo, 1400);
   } else {
@@ -415,22 +449,42 @@ function inimigoDerrotado() {
 }
 
 function jogadorDerrotado() {
+  const num = capituloAtual;
   mostrarTela("tela-fim");
   document.getElementById("fim-titulo").textContent = "Você foi derrotado... 💀";
   document.getElementById("fim-texto").textContent =
     `${jogador.nome} caiu em batalha, mas todo herói merece outra chance!`;
-  document.getElementById("btn-fim").textContent = "🔁 Tentar o Capítulo 1 de novo";
-  document.getElementById("btn-fim").onclick = () => { mostrarTela("tela-batalha"); iniciarCapitulo1(); };
+  document.getElementById("btn-fim").textContent = `🔁 Tentar o Capítulo ${num + 1} de novo`;
+  document.getElementById("btn-fim").onclick = () => iniciarCapitulo(num);
 }
 
 function mostrarVitoriaCapitulo() {
-  desbloquear("capitulo1");
+  // conquista do capítulo concluído
+  desbloquear(capituloAtual === 0 ? "capitulo1" : "capitulo2");
+
   mostrarTela("tela-fim");
-  document.getElementById("fim-titulo").textContent = "🏆 Capítulo 1 Concluído!";
-  document.getElementById("fim-texto").textContent =
-    `${jogador.nome} derrotou o chefão da Ilha da Selva! A equipe está um passo mais perto de voltar pra casa. 🏝️`;
-  document.getElementById("btn-fim").textContent = "🏅 Ver Álbum de Conquistas";
-  document.getElementById("btn-fim").onclick = () => abrirAlbum("tela-fim");
+  const temProximo = capituloAtual + 1 < CAPITULOS.length;
+
+  document.getElementById("fim-titulo").textContent =
+    `🏆 Capítulo ${capituloAtual + 1} Concluído!`;
+
+  if (capituloAtual === 0) {
+    document.getElementById("fim-texto").textContent =
+      `${jogador.nome} derrotou o chefão da Ilha da Selva! Mas o mar guarda novos perigos... 🏴‍☠️`;
+  } else {
+    document.getElementById("fim-texto").textContent =
+      `${jogador.nome} afundou o Capitão Caveira e libertou a Ilha dos Piratas! ⚓ A equipe está cada vez mais perto de casa.`;
+  }
+
+  if (temProximo) {
+    const prox = capituloAtual + 1;
+    document.getElementById("btn-fim").textContent = `➡️ Ir para o Capítulo ${prox + 1}`;
+    document.getElementById("btn-fim").onclick = () => iniciarCapitulo(prox);
+  } else {
+    // acabou o conteúdo disponível por enquanto
+    document.getElementById("btn-fim").textContent = "🏅 Ver Álbum de Conquistas";
+    document.getElementById("btn-fim").onclick = () => abrirAlbum("tela-fim");
+  }
 }
 
 // efeitinho de tremer quando leva/dá dano
