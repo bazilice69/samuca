@@ -113,7 +113,18 @@ function alternarSom() {
   somLigado = !somLigado;
   localStorage.setItem("ilhas_som", somLigado ? "1" : "0");
   atualizarBotaoSom();
-  if (somLigado) { garantirAudio(); SONS.clique(); }
+  if (somLigado) {
+    garantirAudio();
+    SONS.clique();
+    // se estiver numa batalha, retoma a música da ilha
+    const emBatalha = document.getElementById("tela-batalha")?.classList.contains("ativa");
+    if (emBatalha && typeof capituloAtual !== "undefined") {
+      const nome = ["selva", "pirata", "assombrado"][capituloAtual];
+      const lembrar = musicaAtual; musicaAtual = null; tocarMusica(nome || lembrar);
+    }
+  } else {
+    pararMusica();
+  }
 }
 
 function atualizarBotaoSom() {
@@ -127,4 +138,75 @@ function carregarPrefSom() {
   const salvo = localStorage.getItem("ilhas_som");
   if (salvo !== null) somLigado = (salvo === "1");
   atualizarBotaoSom();
+}
+
+
+// ============================================
+//  MÚSICAS DE FUNDO 8-BIT (uma por ilha)
+//  Cada música fica em loop durante o capítulo.
+// ============================================
+
+let musicaTimer = null;   // controla o loop da música
+let musicaAtual = null;   // nome da música tocando
+
+// notas musicais (frequências em Hz)
+const NOTA = {
+  C3:130.81, D3:146.83, E3:164.81, F3:174.61, G3:196.00, A3:220.00, B3:246.94,
+  C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392.00, A4:440.00, B4:493.88,
+  C5:523.25, D5:587.33, E5:659.25, F5:698.46, G5:783.99, A5:880.00,
+  _:0, // silêncio
+};
+
+// cada música é uma lista de notas; cada nota dura "passo" segundos
+const MUSICAS = {
+  // 🌴 SELVA — alegre e aventureira
+  selva: {
+    passo: 0.22,
+    tipo: "square",
+    volume: 0.06,
+    notas: ["C4","E4","G4","E4","F4","A4","G4","E4","D4","F4","E4","C4","G3","C4","E4","G4"],
+  },
+  // 🏴‍☠️ PIRATAS — tema de marujo, meio heroico
+  pirata: {
+    passo: 0.26,
+    tipo: "square",
+    volume: 0.06,
+    notas: ["A3","C4","E4","A4","G4","E4","C4","E4","D4","F4","A4","F4","E4","C4","A3","_"],
+  },
+  // 👻 ASSOMBRADA — sombria, lenta e tensa (tom menor)
+  assombrado: {
+    passo: 0.34,
+    tipo: "triangle",
+    volume: 0.07,
+    notas: ["A3","_","C4","_","E4","D4","C4","_","A3","_","F3","_","E3","_","A3","_"],
+  },
+};
+
+// toca uma música em loop
+function tocarMusica(nome) {
+  if (musicaAtual === nome) return; // já está tocando essa
+  pararMusica();
+  if (!somLigado || !audioCtx) { musicaAtual = nome; return; }
+
+  const m = MUSICAS[nome];
+  if (!m) return;
+  musicaAtual = nome;
+
+  let i = 0;
+  const tocarProxima = () => {
+    if (!somLigado) return; // respeita o botão de mudo
+    const nota = m.notas[i % m.notas.length];
+    const freq = NOTA[nota];
+    if (freq > 0) bip(freq, m.passo * 0.9, m.tipo, m.volume);
+    i++;
+  };
+
+  tocarProxima();
+  musicaTimer = setInterval(tocarProxima, m.passo * 1000);
+}
+
+// para a música de fundo
+function pararMusica() {
+  if (musicaTimer) { clearInterval(musicaTimer); musicaTimer = null; }
+  musicaAtual = null;
 }

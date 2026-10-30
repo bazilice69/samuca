@@ -289,6 +289,12 @@ function fecharAlbum() {
 function mostrarTela(id) {
   document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
   document.getElementById(id).classList.add("ativa");
+
+  // a música de fundo só toca na batalha; nas outras telas ela para
+  // (Status é exceção: continua na batalha por baixo, então não paramos)
+  if (typeof pararMusica === "function" && id !== "tela-batalha" && id !== "tela-status") {
+    pararMusica();
+  }
 }
 
 // ============================================
@@ -490,6 +496,10 @@ function iniciarCapitulo(num) {
   const arena = document.querySelector(".batalha-arena");
   arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado");
   arena.classList.add(CAPITULOS[num].tema);
+
+  // toca a música de fundo da ilha (selva / pirata / assombrado)
+  const nomeMusica = ["selva", "pirata", "assombrado"][num];
+  tocarMusica(nomeMusica);
 
   prepararInimigo();
 }
