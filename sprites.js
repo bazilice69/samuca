@@ -28,6 +28,10 @@ const PALETA = {
   "f": "#ffd23f",     // fogo claro
   "g": "#145a32",     // verde escuro
   "T": "#8d5524",     // tom pele escura (variação)
+  "Z": "#5d6d7e",     // cinza nuvem
+  "z": "#85929e",     // cinza nuvem claro
+  "V": "#f7dc6f",     // amarelo raio
+  "A": "#34495e",     // azul tempestade escuro
 };
 
 // ======= DESENHOS DOS HERÓIS (16x16 pixels) =======
@@ -290,6 +294,66 @@ const SPRITES = {
     "..YKK.....KKY...",
     "..YYK.....KYY...",
     "...KK.....KK....",
+  ],
+
+  // ☁️ NUVEM DE TEMPESTADE — nuvem cinza com raio
+  nuvem: [
+    "................",
+    "....ZZZZZ.......",
+    "..ZZzzzzzZZ.....",
+    ".ZzzzzzzzzzZ....",
+    "ZzzzzzzzzzzzZ...",
+    "ZzzKKzzzKKzzZ...",
+    "ZzzzzzzzzzzzZ...",
+    ".ZzzzzzzzzzZ....",
+    "..ZZZZZZZZZZ....",
+    ".....VV.........",
+    "....VV..........",
+    "...VVVV.........",
+    "....VV..........",
+    "...VV...........",
+    "..VV............",
+    "................",
+  ],
+
+  // 🦅 AVE DA TEMPESTADE — águia azul-escura
+  ave: [
+    "................",
+    ".......KK.......",
+    "......KAAK......",
+    "...KKKAAAAKKK...",
+    "..KAAAAAAAAAAK..",
+    ".KAAAAVVVVAAAAK.",
+    "KAAAAAVKKVAAAAAK",
+    ".KAAAAAAAAAAAAK.",
+    "..KAAAAAAAAAAK..",
+    "...KAAAAAAAAk...",
+    "....KAAAAAAK....",
+    ".....KAAAAK.....",
+    "......KVVK......",
+    ".......VV.......",
+    "......VV........",
+    "................",
+  ],
+
+  // ⚡ CHEFÃO TEMPESTADE — Deus do Trovão
+  chefe_trovao: [
+    ".....VVVVV......",
+    "....VAAAAAV.....",
+    "...VAAAAAAAV....",
+    "..VAASSSSSAAV...",
+    "..VASWKSSKWSAV..",
+    "..VASSSSSSSAV...",
+    "..VAASSSSSAAV...",
+    "...VAAAAAAAV....",
+    "..VAAVAAAVAAV...",
+    ".VAAAVAAAVAAAV..",
+    ".VAAAAVAVAAAAV..",
+    ".VAAAAAVAAAAAAV.",
+    "..VAAV.V.VAAV...",
+    "...VV..V..VV....",
+    "...V...V...V....",
+    ".......V........",
   ],
 
   // 🏴‍☠️ CHEFÃO PIRATA — capitão caveira

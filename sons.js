@@ -119,7 +119,7 @@ function alternarSom() {
     // se estiver numa batalha, retoma a música da ilha
     const emBatalha = document.getElementById("tela-batalha")?.classList.contains("ativa");
     if (emBatalha && typeof capituloAtual !== "undefined") {
-      const nome = ["selva", "pirata", "assombrado", "deserto"][capituloAtual];
+      const nome = ["selva", "pirata", "assombrado", "deserto", "tempestade"][capituloAtual];
       const lembrar = musicaAtual; musicaAtual = null; tocarMusica(nome || lembrar);
     }
   } else {
@@ -186,6 +186,13 @@ const MUSICAS = {
     tipo: "square",
     volume: 0.06,
     notas: ["D4","E4","F4","E4","D4","F4","G4","F4","E4","G4","A4","G4","F4","E4","D4","_"],
+  },
+  // ⚡ TEMPESTADE — intensa, rápida e elétrica (tom dramático)
+  tempestade: {
+    passo: 0.18,
+    tipo: "sawtooth",
+    volume: 0.05,
+    notas: ["E4","E4","G4","E4","A4","G4","E4","D4","E4","G4","B4","A4","G4","E4","D4","_"],
   },
 };
 

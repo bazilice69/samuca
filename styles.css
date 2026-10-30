@@ -621,6 +621,32 @@ canvas {
   bottom: 10px; left: 16px;
   font-size: 26px;
 }
+.batalha-arena.tema-tempestade {
+  background:
+    radial-gradient(circle at 50% 10%, rgba(120,130,160,0.3), transparent 50%),
+    linear-gradient(180deg, #1c2833 0%, #283747 50%, #2c3e50 100%);
+  animation: relampago 4s infinite;
+}
+/* flash de raio de vez em quando */
+@keyframes relampago {
+  0%, 92%, 100% { filter: brightness(1); }
+  93% { filter: brightness(2.2); }
+  94% { filter: brightness(1); }
+  96% { filter: brightness(1.9); }
+  97% { filter: brightness(1); }
+}
+.batalha-arena.tema-tempestade::before {
+  content: "⚡";
+  position: absolute;
+  top: 12px; left: 18px;
+  font-size: 34px;
+}
+.batalha-arena.tema-tempestade::after {
+  content: "🌧️";
+  position: absolute;
+  top: 16px; right: 18px;
+  font-size: 26px;
+}
 /* lua assustadora na ilha assombrada */
 .batalha-arena.tema-assombrado::before {
   content: "🌕";
