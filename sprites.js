@@ -172,6 +172,66 @@ const SPRITES = {
     "................",
   ],
 
+  // 👻 FANTASMA — assombração branca flutuante
+  fantasma: [
+    "................",
+    ".....WWWWW......",
+    "...WWWWWWWWW....",
+    "..WWWWWWWWWWW...",
+    "..WWWWWWWWWWW...",
+    "..WWKKWWWKKWW...",
+    "..WWKKWWWKKWW...",
+    "..WWWWWWWWWWW...",
+    "..WWWWKKKWWWW...",
+    "..WWWWWWWWWWW...",
+    "..WWWWWWWWWWW...",
+    "..WWWWWWWWWWW...",
+    "..WWWWWWWWWWW...",
+    "..WW.WW.WW.WW...",
+    "..W..WW..W..W...",
+    "................",
+  ],
+
+  // 💀 ESQUELETO — caveira com ossos
+  esqueleto: [
+    "................",
+    "....WWWWWW......",
+    "...WWWWWWWW.....",
+    "..WWWWWWWWWW....",
+    "..WWKKWWKKWW....",
+    "..WWKKWWKKWW....",
+    "..WWWWWWWWWW....",
+    "...WWKKKKWW.....",
+    "...WKWKWKWW.....",
+    "..LWWWWWWWWL....",
+    ".L.WWWWWWWW.L...",
+    "...WLWWWWLW.....",
+    "...WLWWWWLW.....",
+    "...WW....WW.....",
+    "..LWW....WWL....",
+    "................",
+  ],
+
+  // 👹 CHEFÃO ASSOMBRADO — grande espírito das trevas (roxo)
+  chefe_assombrado: [
+    ".....KKKKKK.....",
+    "...KKPPPPPPKK...",
+    "..KPPPPPPPPPPK..",
+    ".KPPPPPPPPPPPPK.",
+    ".KPPRRPPPPRRPPK.",
+    ".KPPRRPPPPRRPPK.",
+    ".KPPPPPPPPPPPPK.",
+    ".KPPPKKKKKKPPPK.",
+    ".KPPKFFFFFFKPPK.",
+    ".KPPPPPPPPPPPPK.",
+    "KPPPPPPPPPPPPPPK",
+    "KPPPPPPPPPPPPPPK",
+    "KPPKPPKPPKPPKPPK",
+    ".KK.KK.KK.KK.KK.",
+    "................",
+    "................",
+  ],
+
   // 🏴‍☠️ CHEFÃO PIRATA — capitão caveira
   chefe_pirata: [
     "................",

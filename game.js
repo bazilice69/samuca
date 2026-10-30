@@ -229,6 +229,9 @@ const CONQUISTAS = {
   pirata:         { emoji: "🦜", titulo: "Mares Perigosos",       desc: "Você enfrentou os piratas da segunda ilha." },
   chefao2:        { emoji: "🏴‍☠️", titulo: "Rei dos Mares",        desc: "Você derrotou o Capitão Caveira!" },
   capitulo2:      { emoji: "⚓", titulo: "Capítulo 2 Concluído",  desc: "A Ilha dos Piratas foi conquistada!" },
+  assombrado:     { emoji: "👻", titulo: "Caça-Fantasmas",         desc: "Você enfrentou as assombrações da terceira ilha." },
+  chefao3:        { emoji: "👹", titulo: "Rei das Trevas",         desc: "Você derrotou Sombrax, o Senhor das Trevas!" },
+  capitulo3:      { emoji: "🌟", titulo: "Capítulo 3 Concluído",  desc: "A Ilha Mal-Assombrada foi purificada!" },
 };
 
 // guarda quais conquistas já foram desbloqueadas (salva no celular)
@@ -422,6 +425,7 @@ function viajarPrimeiraIlha() {
 const CAPITULOS = [
   {
     titulo: "Capítulo 1 — A Ilha da Selva 🌴",
+    tema: "tema-selva",
     inimigos: [
       { tipo: "capanga", nome: "Capanga Fominha", sprite: "chefe_selva", emoji: "👹", vidaMax: 50,  ataque: 10 },
       { tipo: "capanga", nome: "Capanga Brutamontes", sprite: "chefe_selva", emoji: "👺", vidaMax: 70,  ataque: 14 },
@@ -430,10 +434,20 @@ const CAPITULOS = [
   },
   {
     titulo: "Capítulo 2 — A Ilha dos Piratas 🏴‍☠️",
+    tema: "tema-pirata",
     inimigos: [
       { tipo: "capanga", nome: "Pirata Perna-de-Pau", sprite: "chefe_pirata", emoji: "🦜", vidaMax: 75,  ataque: 15 },
       { tipo: "capanga", nome: "Pirata Barba-Negra", sprite: "chefe_pirata", emoji: "🧔‍♂️", vidaMax: 95,  ataque: 19 },
       { tipo: "chefao",  nome: "Capitão Caveira, o Rei dos Mares", sprite: "chefe_pirata", emoji: "🏴‍☠️", vidaMax: 170, ataque: 26 },
+    ],
+  },
+  {
+    titulo: "Capítulo 3 — A Ilha Mal-Assombrada 👻",
+    tema: "tema-assombrado",
+    inimigos: [
+      { tipo: "capanga", nome: "Fantasma Chorão", sprite: "fantasma", emoji: "👻", vidaMax: 90,  ataque: 18 },
+      { tipo: "capanga", nome: "Esqueleto Guerreiro", sprite: "esqueleto", emoji: "💀", vidaMax: 110, ataque: 22 },
+      { tipo: "chefao",  nome: "Sombrax, o Senhor das Trevas", sprite: "chefe_assombrado", emoji: "👹", vidaMax: 210, ataque: 30 },
     ],
   },
 ];
@@ -467,6 +481,11 @@ function iniciarCapitulo(num) {
   document.getElementById("batalha-heroi-nome").textContent = jogador.nome;
 
   document.getElementById("cap-titulo").textContent = CAPITULOS[num].titulo;
+
+  // aplica o clima/cor de fundo do capítulo na arena
+  const arena = document.querySelector(".batalha-arena");
+  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado");
+  arena.classList.add(CAPITULOS[num].tema);
 
   prepararInimigo();
 }
@@ -645,7 +664,8 @@ function inimigoDerrotado() {
 
   // conquistas que dependem do capítulo
   if (capituloAtual === 1) desbloquear("pirata");
-  if (eraChefao) desbloquear(capituloAtual === 0 ? "chefao1" : "chefao2");
+  if (capituloAtual === 2) desbloquear("assombrado");
+  if (eraChefao) desbloquear(["chefao1", "chefao2", "chefao3"][capituloAtual]);
 
   indiceInimigo++;
 
@@ -670,7 +690,7 @@ function jogadorDerrotado() {
 
 function mostrarVitoriaCapitulo() {
   // conquista do capítulo concluído
-  desbloquear(capituloAtual === 0 ? "capitulo1" : "capitulo2");
+  desbloquear(["capitulo1", "capitulo2", "capitulo3"][capituloAtual]);
 
   mostrarTela("tela-fim");
   const temProximo = capituloAtual + 1 < CAPITULOS.length;
@@ -678,13 +698,13 @@ function mostrarVitoriaCapitulo() {
   document.getElementById("fim-titulo").textContent =
     `🏆 Capítulo ${capituloAtual + 1} Concluído!`;
 
-  if (capituloAtual === 0) {
-    document.getElementById("fim-texto").textContent =
-      `${jogador.nome} derrotou o chefão da Ilha da Selva! Mas o mar guarda novos perigos... 🏴‍☠️`;
-  } else {
-    document.getElementById("fim-texto").textContent =
-      `${jogador.nome} afundou o Capitão Caveira e libertou a Ilha dos Piratas! ⚓ A equipe está cada vez mais perto de casa.`;
-  }
+  // mensagem de vitória de cada capítulo
+  const mensagens = [
+    `${jogador.nome} derrotou o chefão da Ilha da Selva! Mas o mar guarda novos perigos... 🏴‍☠️`,
+    `${jogador.nome} afundou o Capitão Caveira e libertou a Ilha dos Piratas! ⚓ Mas uma ilha sombria surge na névoa... 👻`,
+    `${jogador.nome} purificou a Ilha Mal-Assombrada e derrotou Sombrax! 🌟 A equipe está cada vez mais perto de casa.`,
+  ];
+  document.getElementById("fim-texto").textContent = mensagens[capituloAtual];
 
   if (temProximo) {
     const prox = capituloAtual + 1;
