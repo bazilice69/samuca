@@ -743,12 +743,12 @@ const CAPITULOS_P2 = [
     ],
   },
   {
-    titulo: "P2 • Capítulo FINAL — Tempestade Lendária ⚡",
-    tema: "tema-tempestade",
+    titulo: "P2 • Capítulo FINAL — A Ilha de Gelo 🧊",
+    tema: "tema-gelo",
     inimigos: [
-      { tipo: "capanga", nome: "Trovão Vivo", sprite: "nuvem", emoji: "☁️", vidaMax: 300, ataque: 42 },
-      { tipo: "capanga", nome: "Fênix do Raio", sprite: "ave", emoji: "🦅", vidaMax: 340, ataque: 46 },
-      { tipo: "chefao",  nome: "Zoltrão Lendário, o Deus Supremo", sprite: "chefe_trovao", emoji: "⚡", vidaMax: 650, ataque: 56, magico: true },
+      { tipo: "capanga", nome: "Bolha de Gelo", sprite: "bolha_gelo", emoji: "🧊", vidaMax: 300, ataque: 42 },
+      { tipo: "capanga", nome: "Lobo da Neve", sprite: "lobo_gelo", emoji: "🐺", vidaMax: 340, ataque: 46 },
+      { tipo: "chefao",  nome: "Rei Congelante, Senhor do Inverno", sprite: "rei_congelante", emoji: "👑", vidaMax: 650, ataque: 56, magico: true },
     ],
   },
 ];
@@ -802,14 +802,14 @@ function iniciarCapitulo(num) {
 
   // aplica o clima/cor de fundo do capítulo na arena
   const arena = document.querySelector(".batalha-arena");
-  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto", "tema-tempestade", "tema-castelo", "tema-fogo", "tema-robotica");
+  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto", "tema-tempestade", "tema-castelo", "tema-fogo", "tema-robotica", "tema-gelo");
   arena.classList.add(caps[num].tema);
 
   // toca a música de fundo da ilha (pelo tema do capítulo)
   const musicaPorTema = {
     "tema-selva": "selva", "tema-pirata": "pirata", "tema-assombrado": "assombrado",
     "tema-deserto": "deserto", "tema-tempestade": "tempestade", "tema-castelo": "castelo",
-    "tema-fogo": "fogo", "tema-robotica": "robotica",
+    "tema-fogo": "fogo", "tema-robotica": "robotica", "tema-gelo": "gelo",
   };
   tocarMusica(musicaPorTema[caps[num].tema] || "selva");
 
@@ -1209,7 +1209,7 @@ function mostrarVitoriaCapitulo() {
       desbloquear("parte2");  // conquista da Parte 2
       document.getElementById("fim-titulo").textContent = "🐉 PARTE 2 CONCLUÍDA! 🎉";
       document.getElementById("fim-texto").textContent =
-        `${jogador.nome} e a nova geração venceram todos os desafios, lado a lado com o Ron adulto! 🐉 As aventuras dos pais agora são a lenda dos filhos. Uma nova geração de HERÓIS nasceu! 🏆✨  FIM.`;
+        `${jogador.nome} e a nova geração derrotaram o Rei Congelante e salvaram a Ilha de Gelo! 🧊 Ao lado do Ron adulto 🐉, eles provaram que as aventuras dos pais agora são a lenda dos filhos. Uma nova geração de HERÓIS nasceu! 🏆✨ FIM.`;
       document.getElementById("btn-fim").textContent = "🏅 Ver Conquistas";
       document.getElementById("btn-fim").onclick = () => abrirAlbum("tela-fim");
       return;

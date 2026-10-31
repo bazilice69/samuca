@@ -32,6 +32,9 @@ const PALETA = {
   "z": "#85929e",     // cinza nuvem claro
   "V": "#f7dc6f",     // amarelo raio
   "A": "#34495e",     // azul tempestade escuro
+  "I": "#9ee8ff",     // gelo azul-claro
+  "i": "#5bc0eb",     // gelo azul
+  "Q": "#dff9ff",     // brilho de neve/gelo
 };
 
 // ======= DESENHOS DOS HERÓIS (16x16 pixels) =======
@@ -233,6 +236,66 @@ const SPRITES = {
     "..LL.......LL...",
     "..LLLL...LLLL...",
     ".LLLLL...LLLLL..",
+    "................",
+  ],
+
+  // 🧊 BOLHA DE GELO — pequeno monstro congelado
+  bolha_gelo: [
+    "................",
+    "......QQQQ......",
+    "....QQIIIIQQ....",
+    "...QIIIIIIQIQ...",
+    "...QIIQIIQIIQ...",
+    "...QIIKIIKIIQ...",
+    "...QIIIIIIIQ....",
+    "....QIIKKIIQ....",
+    "....QIIIIIIQ....",
+    ".....QIIIIQ.....",
+    "......QIIQ......",
+    ".....QIIIIQ.....",
+    "....QII..IIQ....",
+    "....QIQ..QIQ....",
+    "................",
+    "................",
+  ],
+
+  // 🐺 LOBO DE GELO — fera azul da neve
+  lobo_gelo: [
+    "................",
+    "....II....II....",
+    "...IIII..IIII...",
+    "...QIIIIIIIIQ...",
+    "..QIIIKIIKIIIQ..",
+    "..QIIIIIIIIIIQ..",
+    "...QIIIKKIIIQ...",
+    "....QIIIIIIQ....",
+    "..iiiiQIIIIQii..",
+    ".iiiiiQIIIIQiii.",
+    "..iiiQIIIIIIQii.",
+    "....QIIIQQIIIQ..",
+    "....QIIQ..QIIQ..",
+    "....QQQ....QQQ..",
+    "................",
+    "................",
+  ],
+
+  // 👑 REI CONGELANTE — chefão da Ilha de Gelo
+  rei_congelante: [
+    ".....QIQIQ......",
+    "....QIIIIIQ.....",
+    "....QIIIIIQ.....",
+    "...QIIIIIIIQ....",
+    "...QIISSSIIQ....",
+    "...QISKSSKIQ....",
+    "...QIISSSIIQ....",
+    "...QIIKKKIIQ....",
+    "..QIIQQQQQIIQ...",
+    "..QIIQQQQQIIQ...",
+    ".QIIIQQQQQIIIQ..",
+    ".QIIIIIIIQIIIQ..",
+    ".QIIQIIQIIQIIQ..",
+    "..QIQ.....QIQ...",
+    "..QQQ.....QQQ...",
     "................",
   ],
 

@@ -958,3 +958,31 @@ body.jogar-em-pe #aviso-girar {
   .batalha-arena { min-height: 150px; flex-basis: 150px; }
   .batalha-acoes { padding-bottom: 12px; }
 }
+
+
+/* 🧊 Ilha de Gelo — céu polar, neve e cristais congelados */
+.batalha-arena.tema-gelo {
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,0.55), transparent 32%),
+    linear-gradient(180deg, #123a5a 0%, #2377a5 52%, #8ed8f8 100%);
+}
+.batalha-arena.tema-gelo::before {
+  content: "❄️";
+  position: absolute;
+  top: 12px;
+  left: 18px;
+  font-size: 38px;
+  animation: neve-caindo 2.6s ease-in-out infinite;
+}
+.batalha-arena.tema-gelo::after {
+  content: "🧊";
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  font-size: 34px;
+  filter: drop-shadow(0 0 8px rgba(220,250,255,0.85));
+}
+@keyframes neve-caindo {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+  50% { transform: translate(14px, 24px) rotate(120deg); opacity: 1; }
+}

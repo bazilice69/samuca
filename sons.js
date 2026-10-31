@@ -119,8 +119,15 @@ function alternarSom() {
     // se estiver numa batalha, retoma a música da ilha
     const emBatalha = document.getElementById("tela-batalha")?.classList.contains("ativa");
     if (emBatalha && typeof capituloAtual !== "undefined") {
-      const nome = ["selva", "pirata", "assombrado", "deserto", "tempestade", "castelo"][capituloAtual];
-      const lembrar = musicaAtual; musicaAtual = null; tocarMusica(nome || lembrar);
+      const tema = typeof listaCapitulos === "function" ? listaCapitulos()[capituloAtual]?.tema : null;
+      const musicasPorTema = {
+        "tema-selva": "selva", "tema-pirata": "pirata", "tema-assombrado": "assombrado",
+        "tema-deserto": "deserto", "tema-tempestade": "tempestade", "tema-castelo": "castelo",
+        "tema-fogo": "fogo", "tema-robotica": "robotica", "tema-gelo": "gelo",
+      };
+      const nome = musicasPorTema[tema] || musicaAtual;
+      musicaAtual = null;
+      tocarMusica(nome);
     }
   } else {
     pararMusica();
@@ -214,6 +221,13 @@ const MUSICAS = {
     tipo: "square",
     volume: 0.05,
     notas: ["C4","C5","G4","C5","E4","C5","G4","E4","A4","A4","E4","A4","G4","C4","G4","_"],
+  },
+  // 🧊 GELO — lenta, brilhante e misteriosa como uma caverna congelada
+  gelo: {
+    passo: 0.3,
+    tipo: "triangle",
+    volume: 0.06,
+    notas: ["E4","_","G4","_","B4","A4","G4","_","E4","_","D4","_","B3","_","E4","_"],
   },
 };
 
