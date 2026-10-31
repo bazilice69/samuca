@@ -445,10 +445,16 @@ function mostrarTela(id) {
   document.getElementById(id).classList.add("ativa");
 
   // a música de fundo só toca na batalha; nas outras telas ela para
-  // (Status é exceção: continua na batalha por baixo, então não paramos)
+  // (Status e Loja são exceções: continuam na batalha por baixo)
   if (typeof pararMusica === "function" && id !== "tela-batalha" && id !== "tela-status" && id !== "tela-loja") {
     pararMusica();
   }
+}
+
+// Fecha o aviso de rotação para permitir jogar com o celular em pé.
+function continuarEmPe() {
+  document.body.classList.add("jogar-em-pe");
+  sessionStorage.setItem("ilhas_jogar_em_pe", "1");
 }
 
 // ============================================
@@ -1270,4 +1276,11 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("canvas[data-sprite]").forEach(c => {
     desenharSprite(c, c.dataset.sprite, 5);
   });
+});
+
+// Mantém a escolha de jogar em pé enquanto esta aba estiver aberta.
+window.addEventListener("DOMContentLoaded", () => {
+  if (sessionStorage.getItem("ilhas_jogar_em_pe") === "1") {
+    document.body.classList.add("jogar-em-pe");
+  }
 });
