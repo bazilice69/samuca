@@ -201,6 +201,20 @@ const MUSICAS = {
     volume: 0.06,
     notas: ["C4","G4","C5","B4","C5","G4","E4","G4","A4","F4","D4","F4","G4","E4","C4","_"],
   },
+  // 🔥 FOGO — quente, agressiva e intensa
+  fogo: {
+    passo: 0.2,
+    tipo: "sawtooth",
+    volume: 0.05,
+    notas: ["C4","D4","E4","D4","C4","E4","F4","E4","D4","F4","G4","F4","E4","C4","C4","_"],
+  },
+  // 🤖 ROBÓTICA — eletrônica e futurista (notas robóticas)
+  robotica: {
+    passo: 0.16,
+    tipo: "square",
+    volume: 0.05,
+    notas: ["C4","C5","G4","C5","E4","C5","G4","E4","A4","A4","E4","A4","G4","C4","G4","_"],
+  },
 };
 
 // toca uma música em loop

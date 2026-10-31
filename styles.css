@@ -667,6 +667,45 @@ canvas {
   font-size: 24px;
   animation: flutuar 1.5s ease-in-out infinite;
 }
+/* 🔥 Ilha de Fogo — lava e calor */
+.batalha-arena.tema-fogo {
+  background:
+    radial-gradient(circle at 50% 100%, rgba(255,120,0,0.6), transparent 55%),
+    linear-gradient(180deg, #4a0e0e 0%, #8b1a0a 45%, #d63a1a 100%);
+}
+.batalha-arena.tema-fogo::before {
+  content: "🌋";
+  position: absolute;
+  top: 10px; left: 16px;
+  font-size: 36px;
+}
+.batalha-arena.tema-fogo::after {
+  content: "🔥";
+  position: absolute;
+  bottom: 10px; right: 18px;
+  font-size: 28px;
+  animation: flutuar 1.3s ease-in-out infinite;
+}
+/* 🤖 Ilha Robótica — metálica e futurista */
+.batalha-arena.tema-robotica {
+  background:
+    radial-gradient(circle at 50% 20%, rgba(0,200,255,0.25), transparent 50%),
+    linear-gradient(180deg, #11212b 0%, #1c3a4a 50%, #22506b 100%);
+}
+.batalha-arena.tema-robotica::before {
+  content: "⚙️";
+  position: absolute;
+  top: 12px; left: 16px;
+  font-size: 32px;
+  animation: girar-engrenagem 4s linear infinite;
+}
+@keyframes girar-engrenagem { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+.batalha-arena.tema-robotica::after {
+  content: "🔩";
+  position: absolute;
+  bottom: 12px; right: 18px;
+  font-size: 24px;
+}
 /* lua assustadora na ilha assombrada */
 .batalha-arena.tema-assombrado::before {
   content: "🌕";

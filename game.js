@@ -583,6 +583,11 @@ function verificarPodeComecar() {
 // ============================================
 function comecarAventura() {
   mostrarTela("tela-ilha");
+  olhadas = 0;          // reinicia a exploração da ilha
+
+  // mostra o botão de olhar e esconde o de viajar (reinício limpo)
+  document.getElementById("btn-olhar").style.display = "inline-block";
+  document.getElementById("btn-viajar").style.display = "none";
 
   carregarHeroi();      // carrega nível/XP/pontos salvos (se houver)
   carregarLoja();       // carrega moedas, poções e equipamentos
@@ -597,7 +602,13 @@ function comecarAventura() {
 
   if (parte2) {
     document.getElementById("ilha-dialogo").textContent =
-      `${jogador.nome}, filho(a) de um dos heróis lendários, chega à sua primeira ilha. Ao seu lado está o RON ADULTO 🐉, o grande dragão que acompanhou seus pais! A nova aventura começa!`;
+      `${jogador.nome} e a turma chegam a uma ilha quente, cheia de LAVA! 🔥 Olhando o vulcão, as crianças perguntam ao Ron: "Ron, os nossos pais já enfrentaram uma ilha de fogo?" 🐉`;
+    // guarda as próximas falas da conversa com o Ron
+    window._falasRon = [
+      `🐉 Ron responde: "Sim, pequenos! Seus pais enfrentaram perigos ainda maiores... mas nunca uma ilha TÃO quente como esta!"`,
+      `🐉 "Fiquem espertos com a lava e os monstros de fogo. Eu, o velho Ron, vou proteger vocês com meu fogo de dragão adulto! 🔥"`,
+      `Prontos para a aventura? Toque em "Olhar em volta" e depois viajem para enfrentar a Ilha de Fogo!`,
+    ];
   } else {
     document.getElementById("ilha-dialogo").textContent =
       `${jogador.nome} abre os olhos numa pequena ilha deserta. De repente, um filhote de dragão 🐉 surge saltitando da areia! "Grrr... au!" — é o Ron, o mascote da equipe! 🎉`;
@@ -618,13 +629,16 @@ function explorarIlha() {
   const btnOlhar = document.getElementById("btn-olhar");
   const btnViajar = document.getElementById("btn-viajar");
 
-  if (olhadas < FALAS_EXPLORAR.length) {
-    dialogo.textContent = FALAS_EXPLORAR[olhadas];
+  // na Parte 2, usa a conversa com o Ron; na Parte 1, as falas normais de exploração
+  const falas = (parte2 && window._falasRon) ? window._falasRon : FALAS_EXPLORAR;
+
+  if (olhadas < falas.length) {
+    dialogo.textContent = falas[olhadas];
     olhadas++;
   }
 
   // Quando terminou de explorar tudo, libera a viagem e esconde o "olhar em volta"
-  if (olhadas >= FALAS_EXPLORAR.length) {
+  if (olhadas >= falas.length) {
     btnOlhar.style.display = "none";
     btnViajar.style.display = "inline-block";
   }
@@ -702,33 +716,33 @@ const CAPITULOS = [
   },
 ];
 
-// ===== CAPÍTULOS DA PARTE 2 (a nova geração — inimigos mais fortes!) =====
+// ===== CAPÍTULOS DA PARTE 2 (a nova geração — ilhas com temas NOVOS!) =====
 const CAPITULOS_P2 = [
   {
-    titulo: "P2 • Capítulo 1 — Selva Sombria 🌴",
-    tema: "tema-selva",
+    titulo: "P2 • Capítulo 1 — A Ilha de Fogo 🔥",
+    tema: "tema-fogo",
     inimigos: [
-      { tipo: "capanga", nome: "Fera Selvagem", sprite: "chefe_selva", emoji: "🐗", vidaMax: 160, ataque: 28 },
-      { tipo: "capanga", nome: "Guardião da Mata", sprite: "chefe_selva", emoji: "🌿", vidaMax: 200, ataque: 32 },
-      { tipo: "chefao",  nome: "GRRRAU Júnior, o Rei da Selva", sprite: "chefe_selva", emoji: "🦍", vidaMax: 420, ataque: 44 },
+      { tipo: "capanga", nome: "Bolha de Lava", sprite: "lava", emoji: "🔥", vidaMax: 180, ataque: 30 },
+      { tipo: "capanga", nome: "Golem de Magma", sprite: "lava", emoji: "🌋", vidaMax: 220, ataque: 34 },
+      { tipo: "chefao",  nome: "Ignarok, o Dragão de Fogo", sprite: "chefe_fogo", emoji: "🐲", vidaMax: 450, ataque: 46 },
     ],
   },
   {
-    titulo: "P2 • Capítulo 2 — Mar Amaldiçoado 🏴‍☠️",
-    tema: "tema-pirata",
+    titulo: "P2 • Capítulo 2 — A Ilha Robótica 🤖",
+    tema: "tema-robotica",
     inimigos: [
-      { tipo: "capanga", nome: "Pirata Fantasma", sprite: "chefe_pirata", emoji: "🦜", vidaMax: 210, ataque: 34 },
-      { tipo: "capanga", nome: "Corsário Sombrio", sprite: "chefe_pirata", emoji: "⚔️", vidaMax: 250, ataque: 38 },
-      { tipo: "chefao",  nome: "Caveira Negra, a Lenda dos Mares", sprite: "chefe_pirata", emoji: "🏴‍☠️", vidaMax: 500, ataque: 48 },
+      { tipo: "capanga", nome: "Robô Patrulha", sprite: "robo", emoji: "🤖", vidaMax: 230, ataque: 36 },
+      { tipo: "capanga", nome: "Robô de Combate", sprite: "robo", emoji: "⚙️", vidaMax: 280, ataque: 40 },
+      { tipo: "chefao",  nome: "MEGATRON-X, o Robô Supremo", sprite: "chefe_robo", emoji: "🤖", vidaMax: 520, ataque: 50, magico: true },
     ],
   },
   {
-    titulo: "P2 • Capítulo 3 — Tempestade Final ⚡",
+    titulo: "P2 • Capítulo FINAL — Tempestade Lendária ⚡",
     tema: "tema-tempestade",
     inimigos: [
-      { tipo: "capanga", nome: "Trovão Vivo", sprite: "nuvem", emoji: "☁️", vidaMax: 260, ataque: 40 },
-      { tipo: "capanga", nome: "Fênix do Raio", sprite: "ave", emoji: "🦅", vidaMax: 300, ataque: 44 },
-      { tipo: "chefao",  nome: "Zoltrão Lendário, o Deus Supremo", sprite: "chefe_trovao", emoji: "⚡", vidaMax: 650, ataque: 54, magico: true },
+      { tipo: "capanga", nome: "Trovão Vivo", sprite: "nuvem", emoji: "☁️", vidaMax: 300, ataque: 42 },
+      { tipo: "capanga", nome: "Fênix do Raio", sprite: "ave", emoji: "🦅", vidaMax: 340, ataque: 46 },
+      { tipo: "chefao",  nome: "Zoltrão Lendário, o Deus Supremo", sprite: "chefe_trovao", emoji: "⚡", vidaMax: 650, ataque: 56, magico: true },
     ],
   },
 ];
@@ -782,13 +796,14 @@ function iniciarCapitulo(num) {
 
   // aplica o clima/cor de fundo do capítulo na arena
   const arena = document.querySelector(".batalha-arena");
-  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto", "tema-tempestade", "tema-castelo");
+  arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto", "tema-tempestade", "tema-castelo", "tema-fogo", "tema-robotica");
   arena.classList.add(caps[num].tema);
 
   // toca a música de fundo da ilha (pelo tema do capítulo)
   const musicaPorTema = {
     "tema-selva": "selva", "tema-pirata": "pirata", "tema-assombrado": "assombrado",
     "tema-deserto": "deserto", "tema-tempestade": "tempestade", "tema-castelo": "castelo",
+    "tema-fogo": "fogo", "tema-robotica": "robotica",
   };
   tocarMusica(musicaPorTema[caps[num].tema] || "selva");
 
