@@ -156,6 +156,26 @@ const SPRITES = {
     "................",
   ],
 
+  // 🐉 RON ADULTO — dragão grande e imponente (verde escuro com asas)
+  ron_adulto: [
+    "...gg......gg...",
+    "..gGGg....gGGg..",
+    "..gGGGg..gGGGg..",
+    ".gGGGGGggGGGGGg.",
+    ".gGGGGGGGGGGGGg.",
+    "gGGGWKGGGGKWGGGg",
+    "gGGGGGGGGGGGGGGg",
+    "gGGGGGFFFFGGGGGg",
+    "gGGGGGGGGGGGGGGg",
+    ".gGGGGGGGGGGGGg.",
+    "..gGGGGGGGGGGg..",
+    "...gGGGGGGGGg...",
+    "..gGg..gg..gGg..",
+    "..gGg..gg..gGg..",
+    ".gg..........gg.",
+    "................",
+  ],
+
   // 🦍 CHEFÃO SELVA — gorilão
   chefe_selva: [
     "................",

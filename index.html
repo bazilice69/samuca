@@ -14,7 +14,8 @@
       <div class="emblema">🏝️</div>
       <h1 class="jogo-titulo">ILHAS PERDIDAS</h1>
       <p class="jogo-subtitulo">A Aventura dos 4</p>
-      <button class="btn btn-grande" onclick="irParaHistoria()">▶ COMEÇAR</button>
+      <button class="btn btn-grande" onclick="irParaHistoria()">▶ PARTE 1</button>
+      <button class="btn btn-grande btn-parte2" onclick="iniciarParte2()">🐉 PARTE 2</button>
       <br>
       <button class="btn btn-album" onclick="abrirAlbum('tela-titulo')">🏅 Álbum de Conquistas</button>
       <button class="btn btn-album" onclick="abrirLoja('tela-titulo')">🛒 Loja</button>
@@ -28,6 +29,15 @@
     <div class="historia-box">
       <p id="historia-texto" class="historia-texto"></p>
       <button id="btn-historia" class="btn" onclick="proximaHistoria()">Continuar ▶</button>
+    </div>
+  </section>
+
+  <!-- ============ TELA: ABERTURA DA PARTE 2 (Ron adulto narra) ============ -->
+  <section id="tela-historia2" class="tela">
+    <div class="historia-box">
+      <canvas id="ron-narrador" class="ron-narrador" data-sprite="ron_adulto"></canvas>
+      <p id="historia2-texto" class="historia-texto"></p>
+      <button id="btn-historia2" class="btn" onclick="proximaHistoria2()">Continuar ▶</button>
     </div>
   </section>
 

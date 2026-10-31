@@ -385,6 +385,7 @@ const CONQUISTAS = {
   castelo:        { emoji: "🏰", titulo: "Invasor do Castelo",     desc: "Você invadiu o castelo do Rei Bruxo." },
   rei:            { emoji: "🧙‍♂️", titulo: "Herói Lendário",        desc: "Você derrotou o Rei Bruxo e salvou o mundo!" },
   final:          { emoji: "👑", titulo: "A Aventura Termina",     desc: "A equipe voltou para o seu mundo. FIM! 🎉" },
+  parte2:         { emoji: "🐉", titulo: "Nova Geração",           desc: "Você completou a Parte 2 com o Ron adulto!" },
 };
 
 // guarda quais conquistas já foram desbloqueadas (salva no celular)
@@ -492,10 +493,62 @@ function escreverHistoria() {
 function proximaHistoria() {
   passoHistoria++;
   if (passoHistoria >= HISTORIA.length) {
+    parte2 = false;   // a Parte 1 usa os capítulos normais
     mostrarTela("tela-criar");
     return;
   }
   escreverHistoria();
+}
+
+// ============================================
+//  PARTE 2 — A NOVA GERAÇÃO 🐉👨‍👩‍👧‍👦
+//  O Ron adulto conta as aventuras dos pais para os filhos.
+// ============================================
+let parte2 = false;   // quando true, o jogo usa os capítulos da Parte 2
+
+const HISTORIA2 = [
+  "Muitos anos se passaram desde a grande aventura...",
+  "O pequeno Ron cresceu e virou um DRAGÃO ADULTO, forte e sábio! 🐉",
+  "Os quatro heróis voltaram para casa, cresceram e tiveram filhos.",
+  "Numa noite estrelada, o velho Ron reuniu as crianças e contou todas as histórias das aventuras de seus pais...",
+  "Os olhos das crianças brilharam! Elas também queriam ser heróis e viver grandes aventuras!",
+  "E assim, uma NOVA geração parte rumo a ilhas desconhecidas... com o Ron adulto ao seu lado! ⚔️🐉",
+];
+let passoHistoria2 = 0;
+
+function iniciarParte2() {
+  garantirAudio();
+  carregarPrefSom();
+  SONS.clique();
+  parte2 = true;
+  passoHistoria2 = 0;
+  mostrarTela("tela-historia2");
+  escreverHistoria2();
+}
+
+function escreverHistoria2() {
+  const el = document.getElementById("historia2-texto");
+  const texto = HISTORIA2[passoHistoria2];
+  el.textContent = "";
+  let i = 0;
+  clearInterval(window._typeTimer2);
+  window._typeTimer2 = setInterval(() => {
+    el.textContent += texto[i];
+    i++;
+    if (i >= texto.length) clearInterval(window._typeTimer2);
+  }, 32);
+
+  const btn = document.getElementById("btn-historia2");
+  btn.textContent = (passoHistoria2 === HISTORIA2.length - 1) ? "Criar meu herói ▶" : "Continuar ▶";
+}
+
+function proximaHistoria2() {
+  passoHistoria2++;
+  if (passoHistoria2 >= HISTORIA2.length) {
+    mostrarTela("tela-criar");
+    return;
+  }
+  escreverHistoria2();
 }
 
 // ============================================
@@ -538,13 +591,19 @@ function comecarAventura() {
 
   const p = PROFISSOES[jogador.profissao];
   desenharSprite(document.getElementById("heroi-sprite"), jogador.profissao, 7);
+  // na ilha inicial, mostra o Ron adulto na Parte 2, ou o filhote na Parte 1
+  desenharSprite(document.querySelector(".ron-ilha"), parte2 ? "ron_adulto" : "ron", 4);
   document.getElementById("ilha-info-heroi").textContent = `${p.icone} ${jogador.nome} — ${p.nome}`;
 
-  document.getElementById("ilha-dialogo").textContent =
-    `${jogador.nome} abre os olhos numa pequena ilha deserta. De repente, um filhote de dragão 🐉 surge saltitando da areia! "Grrr... au!" — é o Ron, o mascote da equipe! 🎉`;
-
-  desbloquear("heroi_criado");
-  setTimeout(() => desbloquear("conheceu_ron"), 3600);
+  if (parte2) {
+    document.getElementById("ilha-dialogo").textContent =
+      `${jogador.nome}, filho(a) de um dos heróis lendários, chega à sua primeira ilha. Ao seu lado está o RON ADULTO 🐉, o grande dragão que acompanhou seus pais! A nova aventura começa!`;
+  } else {
+    document.getElementById("ilha-dialogo").textContent =
+      `${jogador.nome} abre os olhos numa pequena ilha deserta. De repente, um filhote de dragão 🐉 surge saltitando da areia! "Grrr... au!" — é o Ron, o mascote da equipe! 🎉`;
+    desbloquear("heroi_criado");
+    setTimeout(() => desbloquear("conheceu_ron"), 3600);
+  }
 }
 
 let olhadas = 0;
@@ -643,6 +702,42 @@ const CAPITULOS = [
   },
 ];
 
+// ===== CAPÍTULOS DA PARTE 2 (a nova geração — inimigos mais fortes!) =====
+const CAPITULOS_P2 = [
+  {
+    titulo: "P2 • Capítulo 1 — Selva Sombria 🌴",
+    tema: "tema-selva",
+    inimigos: [
+      { tipo: "capanga", nome: "Fera Selvagem", sprite: "chefe_selva", emoji: "🐗", vidaMax: 160, ataque: 28 },
+      { tipo: "capanga", nome: "Guardião da Mata", sprite: "chefe_selva", emoji: "🌿", vidaMax: 200, ataque: 32 },
+      { tipo: "chefao",  nome: "GRRRAU Júnior, o Rei da Selva", sprite: "chefe_selva", emoji: "🦍", vidaMax: 420, ataque: 44 },
+    ],
+  },
+  {
+    titulo: "P2 • Capítulo 2 — Mar Amaldiçoado 🏴‍☠️",
+    tema: "tema-pirata",
+    inimigos: [
+      { tipo: "capanga", nome: "Pirata Fantasma", sprite: "chefe_pirata", emoji: "🦜", vidaMax: 210, ataque: 34 },
+      { tipo: "capanga", nome: "Corsário Sombrio", sprite: "chefe_pirata", emoji: "⚔️", vidaMax: 250, ataque: 38 },
+      { tipo: "chefao",  nome: "Caveira Negra, a Lenda dos Mares", sprite: "chefe_pirata", emoji: "🏴‍☠️", vidaMax: 500, ataque: 48 },
+    ],
+  },
+  {
+    titulo: "P2 • Capítulo 3 — Tempestade Final ⚡",
+    tema: "tema-tempestade",
+    inimigos: [
+      { tipo: "capanga", nome: "Trovão Vivo", sprite: "nuvem", emoji: "☁️", vidaMax: 260, ataque: 40 },
+      { tipo: "capanga", nome: "Fênix do Raio", sprite: "ave", emoji: "🦅", vidaMax: 300, ataque: 44 },
+      { tipo: "chefao",  nome: "Zoltrão Lendário, o Deus Supremo", sprite: "chefe_trovao", emoji: "⚡", vidaMax: 650, ataque: 54, magico: true },
+    ],
+  },
+];
+
+// retorna a lista de capítulos conforme a parte do jogo
+function listaCapitulos() {
+  return parte2 ? CAPITULOS_P2 : CAPITULOS;
+}
+
 let inimigoAtual = null;
 let indiceInimigo = 0;
 let capituloAtual = 0;
@@ -679,16 +774,23 @@ function iniciarCapitulo(num) {
   desenharSprite(document.getElementById("batalha-heroi-sprite"), jogador.profissao, 7);
   document.getElementById("batalha-heroi-nome").textContent = jogador.nome;
 
-  document.getElementById("cap-titulo").textContent = CAPITULOS[num].titulo;
+  // na Parte 2, o Ron da batalha é o dragão ADULTO 🐉
+  desenharSprite(document.getElementById("ron-batalha"), parte2 ? "ron_adulto" : "ron", parte2 ? 5 : 4);
+
+  const caps = listaCapitulos();
+  document.getElementById("cap-titulo").textContent = caps[num].titulo;
 
   // aplica o clima/cor de fundo do capítulo na arena
   const arena = document.querySelector(".batalha-arena");
   arena.classList.remove("tema-selva", "tema-pirata", "tema-assombrado", "tema-deserto", "tema-tempestade", "tema-castelo");
-  arena.classList.add(CAPITULOS[num].tema);
+  arena.classList.add(caps[num].tema);
 
-  // toca a música de fundo da ilha
-  const nomeMusica = ["selva", "pirata", "assombrado", "deserto", "tempestade", "castelo"][num];
-  tocarMusica(nomeMusica);
+  // toca a música de fundo da ilha (pelo tema do capítulo)
+  const musicaPorTema = {
+    "tema-selva": "selva", "tema-pirata": "pirata", "tema-assombrado": "assombrado",
+    "tema-deserto": "deserto", "tema-tempestade": "tempestade", "tema-castelo": "castelo",
+  };
+  tocarMusica(musicaPorTema[caps[num].tema] || "selva");
 
   prepararInimigo();
 }
@@ -699,7 +801,7 @@ function iniciarCapitulo1() {
 }
 
 function prepararInimigo() {
-  const lista = CAPITULOS[capituloAtual].inimigos;
+  const lista = listaCapitulos()[capituloAtual].inimigos;
   inimigoAtual = { ...lista[indiceInimigo], vida: lista[indiceInimigo].vidaMax };
   turnoDoJogador = true;
   ronEnergia = RON_MAX;   // o Ron começa pronto a cada novo inimigo
@@ -964,7 +1066,10 @@ function acaoRon() {
   SONS.ron();
   ronEnergia = 0; // zera e precisa recarregar
 
-  const dano = 35 + Math.floor(Math.random() * 20); // fogo do Ron bem mais forte! 🔥
+  // na Parte 2 o Ron é ADULTO e cospe fogo MUITO mais forte! 🐉🔥
+  const dano = parte2
+    ? 70 + Math.floor(Math.random() * 30)   // Ron adulto: fogo poderoso
+    : 35 + Math.floor(Math.random() * 20);  // Ron filhote
   inimigoAtual.vida -= dano;
   tremer("batalha-inimigo-sprite");
   animFogoRon(dano);                 // 🔥 bola de fogo voa até o inimigo
@@ -988,7 +1093,7 @@ function pulaRon() {
 
 function inimigoDerrotado() {
   const eraChefao = inimigoAtual.tipo === "chefao";
-  const lista = CAPITULOS[capituloAtual].inimigos;
+  const lista = listaCapitulos()[capituloAtual].inimigos;
 
   // ganha XP: chefão dá bem mais que capanga (XP reforçado pra subir de nível mais rápido)
   const xpGanho = eraChefao ? 60 : 28;
@@ -1069,13 +1174,38 @@ function mostrarVitoriaCapitulo() {
   // bônus de moedas por concluir o capítulo 🪙
   const bonusMoedas = 40 + capituloAtual * 20;
   ganharMoedas(bonusMoedas);
-  // conquista do capítulo concluído
-  desbloquear(["capitulo1", "capitulo2", "capitulo3", "capitulo4", "capitulo5", "final"][capituloAtual]);
 
-  const temProximo = capituloAtual + 1 < CAPITULOS.length;
+  const caps = listaCapitulos();
+  const temProximo = capituloAtual + 1 < caps.length;
   const ehFinal = !temProximo; // último capítulo = fim da aventura
-
   mostrarTela("tela-fim");
+
+  // ==========================================================
+  //  PARTE 2 — final e mensagens próprios
+  // ==========================================================
+  if (parte2) {
+    if (ehFinal) {
+      desbloquear("parte2");  // conquista da Parte 2
+      document.getElementById("fim-titulo").textContent = "🐉 PARTE 2 CONCLUÍDA! 🎉";
+      document.getElementById("fim-texto").textContent =
+        `${jogador.nome} e a nova geração venceram todos os desafios, lado a lado com o Ron adulto! 🐉 As aventuras dos pais agora são a lenda dos filhos. Uma nova geração de HERÓIS nasceu! 🏆✨  FIM.`;
+      document.getElementById("btn-fim").textContent = "🏅 Ver Conquistas";
+      document.getElementById("btn-fim").onclick = () => abrirAlbum("tela-fim");
+      return;
+    }
+    document.getElementById("fim-titulo").textContent = `🏆 ${caps[capituloAtual].titulo} — Concluído!`;
+    document.getElementById("fim-texto").textContent =
+      `${jogador.nome} venceu mais uma etapa com o Ron adulto ao lado! 🐉 A aventura continua...`;
+    const prox = capituloAtual + 1;
+    document.getElementById("btn-fim").textContent = "➡️ Próximo desafio";
+    document.getElementById("btn-fim").onclick = () => iniciarCapitulo(prox);
+    return;
+  }
+
+  // ==========================================================
+  //  PARTE 1 — conquistas e final original
+  // ==========================================================
+  desbloquear(["capitulo1", "capitulo2", "capitulo3", "capitulo4", "capitulo5", "final"][capituloAtual]);
 
   // ===== FINAL DA AVENTURA (venceu o Rei Bruxo) =====
   if (ehFinal) {
@@ -1101,7 +1231,7 @@ function mostrarVitoriaCapitulo() {
   document.getElementById("fim-texto").textContent = mensagens[capituloAtual];
 
   const prox = capituloAtual + 1;
-  const ehUltimoAntesDoFinal = prox === CAPITULOS.length - 1;
+  const ehUltimoAntesDoFinal = prox === caps.length - 1;
   document.getElementById("btn-fim").textContent = ehUltimoAntesDoFinal
     ? "⚔️ Enfrentar o Rei Bruxo!"
     : `➡️ Ir para o Capítulo ${prox + 1}`;
