@@ -1,988 +1,137 @@
-/* ====== BASE ====== */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
 :root {
-  --azul-mar: #1a6fa3;
-  --azul-claro: #3aa6d8;
-  --areia: #f3dca0;
-  --dourado: #ffcf5c;
-  --escuro: #0d2b45;
-  --branco: #fff5e6;
-}
-
-html, body {
-  height: 100%;
-  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
-  color: var(--branco);
-  overflow: hidden;
-  user-select: none;
-}
-
-body {
-  background: linear-gradient(180deg, #0d2b45 0%, #1a6fa3 60%, #3aa6d8 100%);
-}
-
-/* ====== TELAS ====== */
-.tela {
-  position: fixed;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  text-align: center;
-}
-.tela.ativa { display: flex; animation: aparecer 0.5s ease; }
-
-@keyframes aparecer { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-
-/* ====== BOTÕES ====== */
-.btn {
-  background: var(--dourado);
-  color: var(--escuro);
-  border: none;
-  border-radius: 14px;
-  padding: 14px 26px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 5px 0 #c99a2e;
-  transition: transform 0.1s, box-shadow 0.1s;
-  margin-top: 14px;
-}
-.btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #c99a2e; }
-.btn:disabled { background: #6b7a86; box-shadow: 0 5px 0 #4a5660; color: #c3ccd3; cursor: not-allowed; }
-.btn-grande { font-size: 22px; padding: 18px 34px; }
-
-/* ====== TÍTULO ====== */
-.titulo-box { z-index: 2; }
-.emblema { font-size: 80px; animation: flutuar 3s ease-in-out infinite; }
-@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-
-.jogo-titulo {
-  font-size: 48px;
-  letter-spacing: 3px;
-  text-shadow: 3px 3px 0 var(--escuro);
-  margin-top: 6px;
-}
-.jogo-subtitulo { font-size: 20px; color: var(--dourado); margin-bottom: 10px; }
-
-.ondas {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 120px;
-  background: repeating-linear-gradient(90deg, #3aa6d8 0 40px, #2e95c7 40px 80px);
-  opacity: 0.5;
-  border-radius: 50% 50% 0 0 / 40px 40px 0 0;
-  animation: ondular 4s linear infinite;
-}
-@keyframes ondular { from { background-position: 0 0; } to { background-position: 80px 0; } }
-
-/* ====== HISTÓRIA ====== */
-.historia-box {
-  max-width: 560px;
-  background: rgba(13, 43, 69, 0.75);
-  border: 3px solid var(--dourado);
-  border-radius: 18px;
-  padding: 30px 26px;
-}
-.historia-texto { font-size: 21px; line-height: 1.6; min-height: 160px; }
-
-/* ====== CRIAR PERSONAGEM ====== */
-.criar-box {
-  width: 100%;
-  max-width: 520px;
-  background: rgba(13, 43, 69, 0.7);
-  border-radius: 18px;
-  padding: 24px 20px;
-}
-.criar-box h2 { font-size: 30px; margin-bottom: 16px; color: var(--dourado); }
-.label { display: block; text-align: left; margin: 14px 0 6px; font-size: 16px; }
-
-.input-nome {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  border: none;
-  border-radius: 12px;
-  text-align: center;
-  color: var(--escuro);
-}
-
-.profissoes {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 6px;
-}
-.prof {
-  background: rgba(255,255,255,0.1);
-  border: 3px solid transparent;
-  border-radius: 14px;
-  padding: 16px 8px;
-  cursor: pointer;
-  color: var(--branco);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.15s;
-}
-.prof:active { transform: scale(0.96); }
-.prof.selecionada { border-color: var(--dourado); background: rgba(255,207,92,0.2); }
-.prof-icone { font-size: 42px; }
-.prof-nome { font-size: 16px; font-weight: bold; }
-
-.prof-descricao {
-  min-height: 46px;
-  margin-top: 14px;
-  font-size: 15px;
-  font-style: italic;
-  color: #ffe9b8;
-}
-
-/* ====== ILHA ====== */
-#tela-ilha { justify-content: space-between; padding: 0; }
-.ilha-topo {
-  width: 100%;
-  padding: 14px;
-  background: rgba(13,43,69,0.6);
-  text-align: left;
-}
-.ilha-info { font-size: 16px; font-weight: bold; }
-
-.ilha-cena { flex: 1; width: 100%; position: relative; overflow: hidden; }
-.ilha-chao {
-  position: absolute;
-  bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 300px; height: 120px;
-  background: radial-gradient(ellipse at center top, var(--areia) 60%, #e0c178 100%);
-  border-radius: 50% 50% 0 0 / 60px 60px 0 0;
-  z-index: 2;
-}
-.ilha-mar {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 90px;
-  background: var(--azul-claro);
-  opacity: 0.85;
-}
-.palmeira { position: absolute; top: -56px; left: 30px; font-size: 56px; }
-.fogueira { position: absolute; top: -40px; right: 36px; font-size: 38px; animation: flutuar 1.5s ease-in-out infinite; }
-.heroi-sprite { position: absolute; top: -70px; left: 50%; transform: translateX(-50%); font-size: 60px; animation: flutuar 2s ease-in-out infinite; }
-
-.ilha-fala {
-  width: 100%;
-  background: rgba(13,43,69,0.85);
-  padding: 20px;
-  border-top: 3px solid var(--dourado);
-}
-.ilha-fala p { font-size: 18px; line-height: 1.5; min-height: 50px; margin-bottom: 6px; }
-
-/* ====== RESPONSIVO ====== */
-@media (max-width: 420px) {
-  .jogo-titulo { font-size: 38px; }
-  .historia-texto { font-size: 18px; }
-  .prof-icone { font-size: 36px; }
-}
-
-/* ====== AVISO PARA GIRAR O CELULAR ====== */
-#aviso-girar {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: var(--escuro);
-  z-index: 999;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 24px;
-}
-.aviso-girar-box { max-width: 300px; }
-.aviso-girar-icone {
-  font-size: 70px;
-  animation: girar-dica 1.8s ease-in-out infinite;
-}
-@keyframes girar-dica {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(90deg); }
-}
-.aviso-girar-box p { font-size: 20px; margin-top: 14px; line-height: 1.5; }
-
-/* Mostra o aviso só em celular na vertical (retrato) */
-@media (max-width: 920px) and (orientation: portrait) {
-  #aviso-girar { display: flex; }
-}
-
-/* ====== AJUSTES PARA HORIZONTAL (PAISAGEM) ====== */
-@media (orientation: landscape) and (max-height: 500px) {
-  .jogo-titulo { font-size: 40px; }
-  .emblema { font-size: 56px; }
-
-  .historia-box { padding: 18px 24px; }
-  .historia-texto { font-size: 18px; min-height: 90px; }
-
-  /* criar personagem em duas colunas lado a lado */
-  .criar-box { max-width: 760px; padding: 16px 22px; }
-  .criar-box h2 { font-size: 24px; margin-bottom: 8px; }
-  .label { margin: 8px 0 4px; }
-  .profissoes { grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .prof { padding: 10px 6px; }
-  .prof-icone { font-size: 34px; }
-  .prof-descricao { min-height: 30px; margin-top: 8px; }
-  .btn { padding: 10px 22px; font-size: 16px; margin-top: 8px; }
-  .btn-grande { font-size: 18px; padding: 12px 26px; }
-
-  /* ilha: cena mais larga e baixa */
-  .ilha-chao { width: 420px; height: 90px; }
-  .heroi-sprite { font-size: 48px; top: -56px; }
-  .palmeira { font-size: 44px; top: -42px; }
-  .fogueira { font-size: 30px; top: -30px; }
-  .ilha-fala { padding: 12px 20px; }
-  .ilha-fala p { font-size: 16px; min-height: 36px; }
-}
-
-/* ====== BATALHA ====== */
-#tela-batalha { justify-content: flex-start; padding: 0; }
-
-.batalha-topo {
-  width: 100%;
-  padding: 10px;
-  background: rgba(13,43,69,0.7);
-  border-bottom: 2px solid var(--dourado);
-}
-.cap-titulo { font-size: 17px; font-weight: bold; color: var(--dourado); }
-
-.batalha-arena {
-  flex: 1;
-  width: 100%;
-  max-width: 900px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 10px 16px;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(60,180,90,0.15), transparent 40%),
-    linear-gradient(180deg, #1a6fa3 0%, #2e7d4f 100%);
-}
-
-.lado-inimigo, .lado-heroi {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.versus { font-size: 30px; opacity: 0.8; }
-
-.combatente { width: 150px; text-align: center; }
-.comb-nome { font-size: 14px; font-weight: bold; display: block; margin-bottom: 4px; }
-
-.barra-fundo {
-  width: 100%;
-  height: 16px;
-  background: rgba(0,0,0,0.4);
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.3);
-}
-.barra { height: 100%; transition: width 0.4s ease; border-radius: 10px; }
-.barra-heroi { background: linear-gradient(90deg, #4caf50, #8bc34a); }
-.barra-inimigo { background: linear-gradient(90deg, #e53935, #ff7043); }
-.vida-txt { font-size: 12px; display: block; margin-top: 3px; }
-
-.sprite { font-size: 72px; }
-.sprite-inimigo { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
-.sprite-heroi { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
-
-.tremer { animation: tremer-anim 0.4s; }
-@keyframes tremer-anim {
-  0%,100% { transform: translateX(0); }
-  20% { transform: translateX(-8px) rotate(-5deg); }
-  40% { transform: translateX(8px) rotate(5deg); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(6px); }
-}
-
-.batalha-log-box {
-  width: 100%;
-  background: rgba(13,43,69,0.9);
-  padding: 12px 16px;
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-#batalha-log { font-size: 16px; }
-
-.batalha-acoes {
-  width: 100%;
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  justify-content: center;
-  background: rgba(13,43,69,0.95);
-  border-top: 2px solid var(--dourado);
-  flex-wrap: wrap;
-}
-.btn-acao { margin-top: 0; padding: 12px 18px; font-size: 16px; }
-.btn-especial { background: #c77dff; box-shadow: 0 5px 0 #9d4edd; }
-.btn-defender { background: #90caf9; box-shadow: 0 5px 0 #5a9bd4; }
-
-/* ====== FIM / VITÓRIA ====== */
-.fim-box {
-  max-width: 520px;
-  background: rgba(13,43,69,0.8);
-  border: 3px solid var(--dourado);
-  border-radius: 18px;
-  padding: 30px 26px;
-}
-.fim-box h2 { font-size: 30px; color: var(--dourado); margin-bottom: 14px; }
-.fim-box p { font-size: 19px; line-height: 1.5; margin-bottom: 10px; }
-
-/* ====== BATALHA NA HORIZONTAL ====== */
-@media (orientation: landscape) and (max-height: 500px) {
-  .sprite { font-size: 58px; }
-  .batalha-arena { padding: 6px 20px; }
-  .batalha-log-box { min-height: 44px; padding: 8px; }
-  #batalha-log { font-size: 15px; }
-  .batalha-acoes { padding: 8px; gap: 8px; }
-  .btn-acao { padding: 9px 16px; font-size: 15px; }
-  .combatente { width: 170px; }
-}
-
-/* ====== RON, O MASCOTE DRAGÃO 🐉 ====== */
-/* Ron na ilha */
-.ron-ilha {
-  position: absolute;
-  top: -34px;
-  left: 68%;
-  font-size: 34px;
-  animation: ron-pulinho 1.4s ease-in-out infinite;
-}
-@keyframes ron-pulinho {
-  0%, 100% { transform: translateY(0) rotate(-4deg); }
-  50% { transform: translateY(-10px) rotate(4deg); }
-}
-
-/* Ron na batalha (ao lado do herói) */
-.heroi-com-ron { position: relative; display: inline-block; }
-.ron-batalha {
-  position: absolute;
-  bottom: -6px;
-  right: -34px;
-  font-size: 38px;
-  animation: ron-pulinho 1.6s ease-in-out infinite;
-}
-.ron-pula { animation: ron-ataque 0.6s ease; }
-@keyframes ron-ataque {
-  0% { transform: translateY(0) scale(1); }
-  40% { transform: translateY(-26px) scale(1.3) rotate(-15deg); }
-  100% { transform: translateY(0) scale(1); }
-}
-
-@media (orientation: landscape) and (max-height: 500px) {
-  .ron-batalha { font-size: 30px; right: -28px; }
-}
-
-/* ====== BOTÃO DO RON ====== */
-.btn-ron { background: #ff8a3d; box-shadow: 0 5px 0 #d4621a; }
-.btn-ron:disabled { background: #6b7a86; box-shadow: 0 5px 0 #4a5660; }
-
-/* ====== BOTÃO ÁLBUM (título) ====== */
-.btn-album {
-  background: rgba(255,255,255,0.15);
-  color: var(--branco);
-  box-shadow: 0 4px 0 rgba(0,0,0,0.3);
-  font-size: 16px;
-  padding: 10px 20px;
-}
-
-/* ====== TELA ÁLBUM ====== */
-.album-box {
-  width: 100%;
-  max-width: 720px;
-  max-height: 100%;
-  overflow-y: auto;
-  background: rgba(13,43,69,0.8);
-  border-radius: 18px;
-  padding: 22px 18px;
-}
-.album-box h2 { font-size: 28px; color: var(--dourado); }
-.album-contador { font-size: 15px; margin: 6px 0 16px; color: #ffe9b8; }
-
-.album-grade {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.conq-card {
-  background: rgba(255,255,255,0.08);
-  border: 2px solid transparent;
-  border-radius: 14px;
-  padding: 14px 10px;
-  text-align: center;
-}
-.conq-card.feita { border-color: var(--dourado); background: rgba(255,207,92,0.14); }
-.conq-card.bloqueada { opacity: 0.55; }
-.conq-emoji { font-size: 40px; }
-.conq-titulo { font-size: 16px; font-weight: bold; margin: 6px 0 4px; }
-.conq-desc { font-size: 13px; line-height: 1.35; color: #e9f0f5; }
-
-/* ====== POPUP DE CONQUISTA ====== */
-.popup-conquista {
-  position: fixed;
-  top: 16px; left: 50%;
-  transform: translate(-50%, -160%);
-  background: linear-gradient(135deg, #ffcf5c, #ff9a3d);
-  color: var(--escuro);
-  border-radius: 16px;
-  padding: 12px 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  z-index: 1000;
-  transition: transform 0.5s cubic-bezier(.2,1.4,.4,1);
-  max-width: 90%;
-}
-.popup-conquista.mostrar { transform: translate(-50%, 0); }
-.pop-emoji { font-size: 40px; }
-.pop-rotulo { font-size: 12px; font-weight: bold; text-transform: uppercase; opacity: 0.8; }
-.pop-titulo { font-size: 18px; font-weight: bold; }
-.pop-desc { font-size: 13px; }
-
-/* ====== ÁLBUM/BOTÕES NA HORIZONTAL ====== */
-@media (orientation: landscape) and (max-height: 500px) {
-  .album-grade { grid-template-columns: repeat(3, 1fr); }
-  .conq-emoji { font-size: 32px; }
-  .btn-ron { padding: 9px 14px; font-size: 14px; }
-}
-
-/* ====== HUD DE NÍVEL NA BATALHA ====== */
-.batalha-topo {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.hud-nivel {
-  font-size: 13px;
-  background: rgba(0,0,0,0.3);
-  padding: 4px 10px;
-  border-radius: 10px;
-}
-.btn-status {
-  background: var(--dourado);
-  color: var(--escuro);
-  border: none;
-  border-radius: 10px;
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  position: relative;
-}
-.btn-status:active { transform: scale(0.96); }
-.btn-status.piscando { animation: piscar-btn 0.8s ease-in-out infinite; }
-@keyframes piscar-btn {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,207,92,0.8); }
-  50% { box-shadow: 0 0 0 8px rgba(255,207,92,0); }
-}
-.pontos-badge {
-  position: absolute;
-  top: -8px; right: -8px;
-  background: #e53935;
-  color: #fff;
-  font-size: 12px;
-  min-width: 20px;
-  height: 20px;
-  line-height: 20px;
-  border-radius: 50%;
-  text-align: center;
-}
-
-/* ====== TELA DE STATUS / UPGRADE ====== */
-.status-box {
-  width: 100%;
-  max-width: 560px;
-  max-height: 100%;
-  overflow-y: auto;
-  background: rgba(13,43,69,0.85);
-  border: 3px solid var(--dourado);
-  border-radius: 18px;
-  padding: 22px 20px;
-}
-.status-box h2 { font-size: 24px; color: var(--dourado); margin-bottom: 6px; }
-.status-xp { font-size: 15px; color: #cfe3f2; }
-.status-pontos { font-size: 17px; font-weight: bold; color: var(--dourado); margin: 8px 0 16px; }
-
-.status-atributos { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-.attr-linha {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 10px 12px;
-}
-.attr-emoji { font-size: 28px; }
-.attr-nome {
-  flex: 1;
-  text-align: left;
-  font-size: 16px;
-  font-weight: bold;
-  display: flex;
-  flex-direction: column;
-}
-.attr-nome small { font-size: 12px; font-weight: normal; color: #cfe3f2; }
-.attr-valor { font-size: 15px; font-weight: bold; min-width: 46px; text-align: right; }
-.attr-mais {
-  background: var(--dourado);
-  color: var(--escuro);
-  border: none;
-  border-radius: 10px;
-  width: 40px; height: 40px;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.attr-mais:active { transform: scale(0.9); }
-.attr-mais:disabled { background: #6b7a86; color: #c3ccd3; cursor: not-allowed; }
-
-@media (orientation: landscape) and (max-height: 500px) {
-  .attr-emoji { font-size: 22px; }
-  .status-box h2 { font-size: 20px; }
-}
-
-/* ====== CANVAS PIXEL ART (nitidez dos pixels) ====== */
-canvas {
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-/* sprite da profissão (tela criar) */
-.prof-sprite { width: 72px; height: 72px; }
-/* sprites de batalha e ilha agora são canvas */
-.sprite { width: auto; height: auto; }
-.heroi-sprite { width: 112px; height: 112px; }
-
-@media (max-width: 420px) {
-  .prof-sprite { width: 60px; height: 60px; }
-}
-@media (orientation: landscape) and (max-height: 500px) {
-  .prof-sprite { width: 54px; height: 54px; }
-}
-
-/* ====== BOTÃO RECOMEÇAR ====== */
-.btn-reset {
-  background: #e74c3c;
-  color: #fff;
-  box-shadow: 0 4px 0 #a93226;
-  font-size: 15px;
-  padding: 10px 20px;
-}
-
-/* ====== TEMAS DE FUNDO POR ILHA ====== */
-.batalha-arena.tema-selva {
-  background:
-    radial-gradient(circle at 20% 30%, rgba(60,180,90,0.15), transparent 40%),
-    linear-gradient(180deg, #1a6fa3 0%, #2e7d4f 100%);
-}
-.batalha-arena.tema-pirata {
-  background:
-    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12), transparent 40%),
-    linear-gradient(180deg, #16405c 0%, #1a6fa3 100%);
-}
-.batalha-arena.tema-assombrado {
-  background:
-    radial-gradient(circle at 50% 20%, rgba(155,89,182,0.3), transparent 50%),
-    linear-gradient(180deg, #1a1033 0%, #2d1b4e 60%, #3b1f52 100%);
-}
-.batalha-arena.tema-deserto {
-  background:
-    radial-gradient(circle at 75% 25%, rgba(255,230,120,0.4), transparent 45%),
-    linear-gradient(180deg, #f6b24a 0%, #e89a3c 45%, #d98236 100%);
-}
-/* sol escaldante na ilha deserta */
-.batalha-arena.tema-deserto::before {
-  content: "☀️";
-  position: absolute;
-  top: 10px; right: 16px;
-  font-size: 36px;
-}
-.batalha-arena.tema-deserto::after {
-  content: "🌵";
-  position: absolute;
-  bottom: 10px; left: 16px;
-  font-size: 26px;
-}
-.batalha-arena.tema-tempestade {
-  background:
-    radial-gradient(circle at 50% 10%, rgba(120,130,160,0.3), transparent 50%),
-    linear-gradient(180deg, #1c2833 0%, #283747 50%, #2c3e50 100%);
-  animation: relampago 4s infinite;
-}
-/* flash de raio de vez em quando */
-@keyframes relampago {
-  0%, 92%, 100% { filter: brightness(1); }
-  93% { filter: brightness(2.2); }
-  94% { filter: brightness(1); }
-  96% { filter: brightness(1.9); }
-  97% { filter: brightness(1); }
-}
-.batalha-arena.tema-tempestade::before {
-  content: "⚡";
-  position: absolute;
-  top: 12px; left: 18px;
-  font-size: 34px;
-}
-.batalha-arena.tema-tempestade::after {
-  content: "🌧️";
-  position: absolute;
-  top: 16px; right: 18px;
-  font-size: 26px;
-}
-.batalha-arena.tema-castelo {
-  background:
-    radial-gradient(circle at 50% 15%, rgba(142,68,173,0.35), transparent 55%),
-    linear-gradient(180deg, #2c1338 0%, #3d1f52 50%, #1a0d2e 100%);
-}
-.batalha-arena.tema-castelo::before {
-  content: "🏰";
-  position: absolute;
-  top: 10px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 40px;
-  opacity: 0.9;
-}
-.batalha-arena.tema-castelo::after {
-  content: "🔥";
-  position: absolute;
-  bottom: 12px; left: 20px;
-  font-size: 24px;
-  animation: flutuar 1.5s ease-in-out infinite;
-}
-/* 🔥 Ilha de Fogo — lava e calor */
-.batalha-arena.tema-fogo {
-  background:
-    radial-gradient(circle at 50% 100%, rgba(255,120,0,0.6), transparent 55%),
-    linear-gradient(180deg, #4a0e0e 0%, #8b1a0a 45%, #d63a1a 100%);
-}
-.batalha-arena.tema-fogo::before {
-  content: "🌋";
-  position: absolute;
-  top: 10px; left: 16px;
-  font-size: 36px;
-}
-.batalha-arena.tema-fogo::after {
-  content: "🔥";
-  position: absolute;
-  bottom: 10px; right: 18px;
-  font-size: 28px;
-  animation: flutuar 1.3s ease-in-out infinite;
-}
-/* 🤖 Ilha Robótica — metálica e futurista */
-.batalha-arena.tema-robotica {
-  background:
-    radial-gradient(circle at 50% 20%, rgba(0,200,255,0.25), transparent 50%),
-    linear-gradient(180deg, #11212b 0%, #1c3a4a 50%, #22506b 100%);
-}
-.batalha-arena.tema-robotica::before {
-  content: "⚙️";
-  position: absolute;
-  top: 12px; left: 16px;
-  font-size: 32px;
-  animation: girar-engrenagem 4s linear infinite;
-}
-@keyframes girar-engrenagem { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-.batalha-arena.tema-robotica::after {
-  content: "🔩";
-  position: absolute;
-  bottom: 12px; right: 18px;
-  font-size: 24px;
-}
-/* lua assustadora na ilha assombrada */
-.batalha-arena.tema-assombrado::before {
-  content: "🌕";
-  position: absolute;
-  top: 10px; left: 14px;
-  font-size: 34px;
-  opacity: 0.8;
-}
-.batalha-arena.tema-assombrado::after {
-  content: "🦇";
-  position: absolute;
-  top: 24px; right: 20px;
-  font-size: 22px;
-  animation: flutuar 2.5s ease-in-out infinite;
-}
-.batalha-arena { position: relative; }
-
-/* ====== BOTÃO DE SOM ====== */
-.btn-som {
-  background: rgba(255,255,255,0.15);
-  border: none;
-  border-radius: 10px;
-  font-size: 20px;
-  padding: 6px 10px;
-  cursor: pointer;
-  margin-left: 6px;
-}
-.btn-som:active { transform: scale(0.9); }
-/* na tela de título fica mais destacado */
-#tela-titulo .btn-som {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 14px;
-}
-
-/* ====== BOTÃO DEFENDER DA MAGIA ====== */
-.btn-magia {
-  background: linear-gradient(135deg, #9b59b6, #6c3483);
-  color: #fff;
-  box-shadow: 0 5px 0 #512e5f;
-}
-.btn-magia.piscando-magia {
-  animation: piscar-magia 0.6s ease-in-out infinite;
-}
-@keyframes piscar-magia {
-  0%, 100% { box-shadow: 0 5px 0 #512e5f, 0 0 0 0 rgba(155,89,182,0.9); }
-  50% { box-shadow: 0 5px 0 #512e5f, 0 0 16px 6px rgba(187,107,217,0.9); }
-}
-
-/* ====== LOJA ====== */
-.loja-box {
-  width: 100%;
-  max-width: 640px;
-  max-height: 100%;
-  overflow-y: auto;
-  background: rgba(13,43,69,0.9);
-  border: 3px solid var(--dourado);
-  border-radius: 18px;
-  padding: 22px 18px;
-}
-.loja-box h2 { font-size: 26px; color: var(--dourado); }
-.loja-moedas {
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--dourado);
-  background: rgba(0,0,0,0.3);
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 12px;
-  margin: 10px 0;
-}
-.loja-secao {
-  font-size: 17px;
-  text-align: left;
-  margin: 16px 0 8px;
-  color: #ffe9b8;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding-bottom: 4px;
-}
-.loja-grade { display: flex; flex-direction: column; gap: 10px; }
-.loja-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 10px 12px;
-}
-.loja-card.loja-tem { opacity: 0.6; border: 2px solid var(--dourado); }
-.loja-emoji { font-size: 32px; flex-shrink: 0; }
-.loja-info { flex: 1; text-align: left; }
-.loja-nome { font-size: 15px; font-weight: bold; }
-.loja-desc { font-size: 12px; color: #cfe3f2; }
-.loja-qtd { color: var(--dourado); font-size: 13px; }
-.loja-comprar {
-  background: var(--dourado);
-  color: var(--escuro);
-  border: none;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.loja-comprar:active { transform: scale(0.94); }
-.loja-comprar:disabled { background: #6b7a86; color: #c3ccd3; cursor: not-allowed; }
-
-/* ====== MOCHILA (poções na batalha) ====== */
-.btn-mochila { background: #52b788; box-shadow: 0 5px 0 #2d6a4f; }
-.mochila-painel {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 900;
-  padding: 20px;
-}
-.mochila-box {
-  background: rgba(13,43,69,0.98);
-  border: 3px solid var(--dourado);
-  border-radius: 16px;
-  padding: 20px;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-}
-.mochila-box h3 { color: var(--dourado); margin-bottom: 14px; }
-.mochila-lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.mochila-item {
-  background: rgba(255,255,255,0.1);
-  border: 2px solid var(--dourado);
-  color: var(--branco);
-  border-radius: 10px;
-  padding: 12px;
-  font-size: 16px;
-  cursor: pointer;
-}
-.mochila-item:active { transform: scale(0.96); }
-.mochila-vazia { color: #cfe3f2; font-style: italic; padding: 12px; }
-
-/* ====== ANIMAÇÕES DE BATALHA ====== */
-.camada-efeitos {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;  /* não atrapalha os cliques */
-  overflow: hidden;
-  z-index: 5;
-}
-
-/* projétil (magia/fogo voando) */
-.efeito-projetil {
-  position: absolute;
-  font-size: 34px;
-  transform: translate(-50%, -50%);
-  transition: transform 0.46s cubic-bezier(.4,0,.6,1);
-  will-change: transform;
-}
-
-/* explosão quando acerta */
-.efeito-explosao {
-  position: absolute;
-  font-size: 30px;
-  transform: translate(-50%, -50%) scale(0.3);
-  animation: explodir 0.6s ease-out forwards;
-}
-@keyframes explodir {
-  0%   { transform: translate(-50%,-50%) scale(0.3); opacity: 1; }
-  40%  { transform: translate(-50%,-50%) scale(1.6); opacity: 1; }
-  100% { transform: translate(-50%,-50%) scale(2.1); opacity: 0; }
-}
-
-/* número de dano saltando */
-.efeito-numero {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  font-size: 26px;
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000;
-  animation: saltar-num 0.9s ease-out forwards;
-  white-space: nowrap;
-}
-.efeito-numero.cura { color: #7CFC00; }
-@keyframes saltar-num {
-  0%   { transform: translate(-50%,-50%) scale(0.5); opacity: 0; }
-  20%  { transform: translate(-50%,-90%) scale(1.3); opacity: 1; }
-  100% { transform: translate(-50%,-180%) scale(1); opacity: 0; }
-}
-
-/* ====== PARTE 2 ====== */
-.btn-parte2 {
-  background: linear-gradient(135deg, #52b788, #2d6a4f);
-  color: #fff;
-  box-shadow: 0 5px 0 #1b4332;
-  margin-top: 10px;
-}
-/* Ron adulto narrando a abertura da Parte 2 */
-.ron-narrador {
-  display: block;
-  margin: 0 auto 12px;
-  width: 120px;
-  height: 120px;
-  image-rendering: pixelated;
-  animation: flutuar 2.4s ease-in-out infinite;
-}
-
-
-/* ====== BATALHA ACESSÍVEL EM QUALQUER TAMANHO DE TELA ====== */
-/* A tela pode rolar se os controles não couberem na altura disponível. */
-#tela-batalha {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-.batalha-arena {
-  min-height: 230px;
-  flex: 1 0 230px;
-}
-.batalha-acoes {
-  flex-shrink: 0;
-}
-
-/* O aviso recomenda a horizontal, mas não impede jogar em pé. */
-.btn-continuar-pe {
-  font-size: 15px;
-  padding: 11px 18px;
-}
-body.jogar-em-pe #aviso-girar {
-  display: none !important;
-}
-
-/* Layout compacto para celular na vertical, sem esconder os botões. */
-@media (max-width: 920px) and (orientation: portrait) {
-  #tela-batalha { justify-content: flex-start; }
-  .batalha-topo { padding: 8px; }
-  .batalha-arena { min-height: 260px; flex-basis: 260px; }
-  .combatente { width: 128px; }
-  .sprite { max-width: 102px; max-height: 102px; }
-  .batalha-log-box { min-height: 52px; padding: 9px 12px; }
-  #batalha-log { font-size: 14px; }
-  .batalha-acoes { gap: 7px; padding: 10px 8px 16px; }
-  .btn-acao { padding: 10px 12px; font-size: 14px; }
-}
-
-@media (orientation: landscape) and (max-height: 500px) {
-  #tela-batalha { overflow-y: auto; }
-  .batalha-arena { min-height: 150px; flex-basis: 150px; }
-  .batalha-acoes { padding-bottom: 12px; }
-}
-
-
-/* 🧊 Ilha de Gelo — céu polar, neve e cristais congelados */
-.batalha-arena.tema-gelo {
-  background:
-    radial-gradient(circle at 50% 12%, rgba(255,255,255,0.55), transparent 32%),
-    linear-gradient(180deg, #123a5a 0%, #2377a5 52%, #8ed8f8 100%);
-}
-.batalha-arena.tema-gelo::before {
-  content: "❄️";
-  position: absolute;
-  top: 12px;
-  left: 18px;
-  font-size: 38px;
-  animation: neve-caindo 2.6s ease-in-out infinite;
-}
-.batalha-arena.tema-gelo::after {
-  content: "🧊";
-  position: absolute;
-  right: 18px;
-  bottom: 12px;
-  font-size: 34px;
-  filter: drop-shadow(0 0 8px rgba(220,250,255,0.85));
-}
-@keyframes neve-caindo {
-  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
-  50% { transform: translate(14px, 24px) rotate(120deg); opacity: 1; }
-}
+  --ink: #202442;
+  --paper: #fff9df;
+  --cream: #ffe6a0;
+  --sky: #76c6dd;
+  --orange: #e75d34;
+  --red: #ce4851;
+  --green: #3b9561;
+  --purple: #6256b6;
+  --yellow: #ffc849;
+  --floor: #f7d57e;
+  --wall: #b86145;
+  --pixel: 4px 4px 0 var(--ink);
+  font-family: "Courier New", Courier, monospace;
+}
+
+* { box-sizing: border-box; }
+body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--ink); background-color: var(--sky); background-image: linear-gradient(45deg, #64b5cd 25%, transparent 25%), linear-gradient(-45deg, #64b5cd 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #64b5cd 75%), linear-gradient(-45deg, transparent 75%, #64b5cd 75%); background-position: 0 0, 0 8px, 8px -8px, -8px 0; background-size: 16px 16px; }
+button, input { font: inherit; }
+button { font-weight: 900; }
+button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+.game-shell { width: min(1060px, 100%); margin: 0 auto; padding: 17px 14px 28px; }
+.topbar, .game-topline, .section-heading, .world-card, .mission-card, .game-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.topbar { margin-bottom: 20px; }
+.brand { display: flex; align-items: center; gap: 11px; padding: 0; color: var(--ink); border: 0; background: transparent; cursor: pointer; text-align: left; }
+.brand-icon { display: grid; width: 52px; height: 52px; place-items: center; border: 3px solid var(--ink); background: var(--yellow); box-shadow: var(--pixel); font-size: 30px; }
+.brand strong { display: block; font-size: clamp(1.4rem, 6vw, 2rem); letter-spacing: -.1em; text-transform: uppercase; }
+.eyebrow { display: block; margin: 0 0 4px; color: #994030; font-size: .61rem; font-weight: 900; letter-spacing: .07em; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: 10px; font-size: clamp(1.35rem, 6vw, 2rem); letter-spacing: -.1em; text-transform: uppercase; }
+h2 { margin-bottom: 0; font-size: 1.04rem; letter-spacing: -.07em; text-transform: uppercase; }
+h3 { margin-bottom: 6px; font-size: .86rem; }
+.icon-button, .close-button { display: grid; width: 42px; height: 42px; place-items: center; cursor: pointer; color: var(--paper); border: 3px solid var(--ink); background: var(--purple); box-shadow: var(--pixel); font-size: 1.25rem; }
+
+.screen.is-hidden { display: none; }
+.pixel-card { border: 3px solid var(--ink); background: var(--paper); box-shadow: 6px 6px 0 var(--ink); }
+.hero-card { position: relative; display: grid; gap: 15px; padding: 20px; overflow: hidden; background: #ffe083; }
+.hero-card h1 { max-width: 500px; }
+.hero-card p:not(.eyebrow) { max-width: 610px; margin-bottom: 0; color: #4d5472; font-size: .82rem; line-height: 1.5; }
+.hero-sprite { position: absolute; right: -11px; top: -12px; opacity: .25; font-size: 6rem; transform: rotate(14deg); }
+.primary-button, .back-button, .world-play, .control-button, .action-button { cursor: pointer; border: 3px solid var(--ink); transition: transform .1s, box-shadow .1s; }
+.primary-button { align-self: start; padding: 12px 15px; color: var(--paper); background: var(--orange); box-shadow: var(--pixel); }
+.primary-button:hover, .world-play:hover { filter: brightness(1.05); transform: translate(-1px, -1px); }
+.primary-button:active, .world-play:active, .control-button:active, .action-button:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.full-button { width: 100%; }
+.worlds-section { margin-top: 23px; }
+.section-heading { margin-bottom: 12px; }
+.world-list { display: grid; gap: 12px; }
+.empty-worlds { padding: 22px; border: 3px dashed var(--ink); background: #d9eff3; color: #43516d; font-size: .8rem; line-height: 1.5; text-align: center; }
+.world-card { padding: 13px; border: 3px solid var(--ink); background: var(--paper); box-shadow: var(--pixel); }
+.world-role-icon { display: grid; flex: 0 0 44px; width: 44px; height: 44px; place-items: center; border: 2px solid var(--ink); background: var(--cream); font-size: 1.5rem; }
+.world-info { flex: 1; min-width: 0; }
+.world-info strong { display: block; overflow: hidden; font-size: .87rem; text-overflow: ellipsis; white-space: nowrap; }
+.world-info span { display: block; margin-top: 4px; color: #59617b; font-size: .67rem; }
+.world-play { flex: 0 0 auto; padding: 9px 10px; color: var(--ink); background: var(--yellow); box-shadow: 3px 3px 0 var(--ink); font-size: .68rem; }
+
+.create-card { width: min(680px, 100%); margin: 0 auto; padding: 20px; }
+.back-button { padding: 8px 9px; color: var(--ink); background: var(--yellow); box-shadow: 3px 3px 0 var(--ink); font-size: .68rem; }
+.create-card .back-button { margin-bottom: 22px; }
+.intro-copy { margin-bottom: 19px; color: #525a77; font-size: .8rem; line-height: 1.45; }
+.field-label { display: block; margin-bottom: 7px; font-size: .75rem; font-weight: 900; }
+.pixel-input { width: 100%; margin-bottom: 18px; padding: 12px; color: var(--ink); border: 3px solid var(--ink); background: #fffdf1; font-weight: 700; }
+.pixel-input::placeholder { color: #83879a; }
+.role-choices { display: grid; gap: 10px; margin-bottom: 21px; }
+.role-choice { display: flex; align-items: center; gap: 11px; padding: 11px; cursor: pointer; border: 3px solid var(--ink); background: #fff5d6; box-shadow: 3px 3px 0 #c6b78e; }
+.role-choice.selected { background: #ccecf3; box-shadow: 4px 4px 0 var(--ink); transform: translate(-1px, -1px); }
+.role-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.role-icon { display: grid; flex: 0 0 47px; width: 47px; height: 47px; place-items: center; border: 2px solid var(--ink); background: var(--yellow); font-size: 1.6rem; }
+.role-choice strong, .role-choice small { display: block; }
+.role-choice strong { font-size: .85rem; }
+.role-choice small { margin-top: 4px; color: #535c78; font-size: .67rem; line-height: 1.35; }
+
+.game-topline { margin-bottom: 15px; }
+.world-title { flex: 1; min-width: 0; text-align: center; }
+.world-title span, .world-title strong { display: block; }
+.world-title span { margin-bottom: 3px; color: #a03d2d; font-size: .59rem; font-weight: 900; }
+.world-title strong { overflow: hidden; font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
+.coin-box { display: flex; align-items: center; gap: 4px; min-width: 61px; padding: 8px; border: 3px solid var(--ink); background: var(--yellow); box-shadow: 3px 3px 0 var(--ink); font-size: .84rem; }
+.mission-card { align-items: flex-start; margin-bottom: 17px; padding: 13px; background: var(--paper); }
+.mission-icon { display: grid; flex: 0 0 43px; width: 43px; height: 43px; place-items: center; border: 2px solid var(--ink); background: #d4eaf2; font-size: 1.45rem; }
+.mission-copy { flex: 1; min-width: 0; }
+.mission-copy h2 { margin-bottom: 5px; }
+.mission-copy p { margin-bottom: 0; color: #525b78; font-size: .72rem; line-height: 1.45; }
+.timer-wrap { height: 10px; margin-top: 10px; overflow: hidden; border: 2px solid var(--ink); background: #bb745c; }
+.timer-bar { width: 100%; height: 100%; background: var(--green); transition: width .5s linear, background .2s; }
+.timer-bar.warning { background: var(--red); }
+.timer-wrap.is-hidden { display: none; }
+
+.play-area { padding: 10px; border: 3px solid var(--ink); background: #9bd8d4; box-shadow: 6px 6px 0 var(--ink); }
+.map-frame { overflow: auto; border: 3px solid var(--ink); background: #f0c873; }
+.game-map { display: grid; grid-template-columns: repeat(10, minmax(43px, 1fr)); grid-template-rows: repeat(7, 43px); min-width: 430px; outline: none; }
+.tile { position: relative; display: grid; min-width: 0; place-items: center; border-right: 1px solid rgba(125, 77, 38, .32); border-bottom: 1px solid rgba(125, 77, 38, .32); background-color: var(--floor); background-image: radial-gradient(#e8bd61 1px, transparent 1px); background-size: 7px 7px; }
+.tile.is-wall { background-color: var(--wall); background-image: repeating-linear-gradient(0deg, transparent 0 9px, rgba(81, 42, 41, .3) 9px 11px); }
+.tile.is-counter { background-color: #9c604c; background-image: repeating-linear-gradient(90deg, #844a3e 0 7px, #b9765b 7px 14px); }
+.tile.is-table { background-color: #af6c45; background-image: linear-gradient(45deg, transparent 48%, #8d4d39 49% 52%, transparent 53%); }
+.tile.is-station { background-color: #d2edf1; background-image: none; }
+.tile.is-door { background-color: #8bc58b; background-image: none; }
+.tile-symbol { z-index: 1; font-size: 1.35rem; filter: drop-shadow(2px 2px 0 rgba(32,36,66,.2)); }
+.sprite { position: absolute; z-index: 3; display: grid; width: 32px; height: 32px; place-items: center; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 1.22rem; line-height: 1; }
+.player-sprite { background: #ffcf5a; }
+.complaint-sprite { background: #ffaaa5; animation: blink .6s steps(2, end) infinite; }
+.plate-sprite { z-index: 4; background: #e6f8ff; transform: translate(-12px, -12px); }
+.laugh-sprite { z-index: 4; background: #fff0a9; transform: translate(12px, -12px); animation: laugh .35s steps(2, end) infinite; }
+.target-sprite { background: #f5a96a; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 7px 12px; padding: 10px 4px 0; font-size: .62rem; font-weight: 900; }
+.legend-item { display: inline-flex; align-items: center; gap: 4px; }
+.legend-square { display: inline-grid; width: 15px; height: 15px; place-items: center; border: 1px solid var(--ink); background: #d2edf1; font-size: .7rem; }
+.game-bottom { flex-wrap: wrap; margin-top: 16px; }
+.game-message { flex: 1 1 250px; margin-bottom: 0; padding: 10px; border: 2px solid var(--ink); background: #d9eef2; font-size: .69rem; font-weight: 900; line-height: 1.4; }
+.game-message.error { background: #ffbcb7; }
+.game-message.success { background: #bde6a8; }
+.action-hint { font-size: .62rem; font-weight: 900; }
+kbd { padding: 3px 4px; color: var(--paper); border: 1px solid var(--ink); background: var(--purple); font-family: inherit; font-size: .58rem; }
+
+.mobile-controls { position: relative; display: grid; grid-template-columns: repeat(3, 59px); grid-template-rows: repeat(2, 48px); justify-content: center; gap: 6px; margin: 23px auto 0; }
+.control-button, .action-button { display: grid; place-items: center; color: var(--paper); background: var(--purple); box-shadow: 3px 3px 0 var(--ink); font-size: 1rem; }
+.control-button.up { grid-column: 2; grid-row: 1; }
+.control-button.left { grid-column: 1; grid-row: 2; }
+.control-button.right { grid-column: 3; grid-row: 2; }
+.control-button.down { grid-column: 2; grid-row: 2; }
+.action-button { grid-column: 4; grid-row: 1 / 3; width: 68px; color: var(--ink); background: var(--yellow); font-size: .61rem; }
+
+.game-dialog { width: min(540px, calc(100% - 28px)); padding: 27px 22px 22px; color: var(--ink); border: 4px solid var(--ink); background: var(--paper); box-shadow: 8px 8px 0 var(--ink); text-align: center; }
+.game-dialog::backdrop { background: rgba(32,36,66,.68); }
+.game-dialog h2 { margin: 8px 0 17px; font-size: 1.25rem; }
+.dialog-icon { display: block; font-size: 2.8rem; }
+.close-button { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; box-shadow: none; }
+.help-columns { display: grid; gap: 10px; text-align: left; }
+.help-columns section { padding: 10px; border: 2px solid var(--ink); background: #fff0c4; }
+.help-columns p, .help-tip { margin-bottom: 0; color: #505974; font-size: .72rem; line-height: 1.5; }
+.help-tip { margin: 14px 0; text-align: left; }
+
+@keyframes blink { 50% { visibility: hidden; } }
+@keyframes laugh { 50% { transform: translate(12px, -16px); } }
+@media (min-width: 620px) { .game-shell { padding: 26px 23px 38px; } .hero-card { grid-template-columns: 1fr auto; align-items: end; padding: 25px; } .hero-sprite { font-size: 8rem; } .world-card { padding: 15px; } .mission-card { padding: 16px; } .play-area { padding: 14px; } .game-map { grid-template-rows: repeat(7, 54px); } .help-columns { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 850px) { .game-map { grid-template-rows: repeat(7, 59px); } .mobile-controls { margin-top: 27px; } }

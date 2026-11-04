@@ -1,240 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Ilhas Perdidas — A Aventura dos 4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#e75d34" />
+  <title>Bom Chefe | Pixel Art</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
-  <!-- ============ TELA 1: TÍTULO ============ -->
-  <section id="tela-titulo" class="tela ativa">
-    <div class="titulo-box">
-      <div class="emblema">🏝️</div>
-      <h1 class="jogo-titulo">ILHAS PERDIDAS</h1>
-      <p class="jogo-subtitulo">A Aventura dos 4</p>
-      <button class="btn btn-grande" onclick="irParaHistoria()">▶ PARTE 1</button>
-      <button class="btn btn-grande btn-parte2" onclick="iniciarParte2()">🐉 PARTE 2</button>
-      <br>
-      <button class="btn btn-album" onclick="abrirAlbum('tela-titulo')">🏅 Álbum de Conquistas</button>
-      <button class="btn btn-album" onclick="abrirLoja('tela-titulo')">🛒 Loja</button>
-      <button class="btn-som" onclick="alternarSom()" title="Ligar/desligar som">🔊</button>
-    </div>
-    <div class="ondas"></div>
-  </section>
-
-  <!-- ============ TELA 2: HISTÓRIA ============ -->
-  <section id="tela-historia" class="tela">
-    <div class="historia-box">
-      <p id="historia-texto" class="historia-texto"></p>
-      <button id="btn-historia" class="btn" onclick="proximaHistoria()">Continuar ▶</button>
-    </div>
-  </section>
-
-  <!-- ============ TELA: ABERTURA DA PARTE 2 (Ron adulto narra) ============ -->
-  <section id="tela-historia2" class="tela">
-    <div class="historia-box">
-      <canvas id="ron-narrador" class="ron-narrador" data-sprite="ron_adulto"></canvas>
-      <p id="historia2-texto" class="historia-texto"></p>
-      <button id="btn-historia2" class="btn" onclick="proximaHistoria2()">Continuar ▶</button>
-    </div>
-  </section>
-
-  <!-- ============ TELA 3: CRIAR PERSONAGEM ============ -->
-  <section id="tela-criar" class="tela">
-    <div class="criar-box">
-      <h2>Crie seu Herói</h2>
-
-      <label class="label">Nome do herói:</label>
-      <input id="input-nome" class="input-nome" type="text" placeholder="Digite um nome..." maxlength="14" />
-
-      <label class="label">Escolha a profissão:</label>
-      <div class="profissoes">
-        <button class="prof" data-prof="policial" onclick="escolherProfissao('policial', this)">
-          <canvas class="prof-sprite" data-sprite="policial"></canvas>
-          <span class="prof-nome">Policial</span>
-        </button>
-        <button class="prof" data-prof="bombeiro" onclick="escolherProfissao('bombeiro', this)">
-          <canvas class="prof-sprite" data-sprite="bombeiro"></canvas>
-          <span class="prof-nome">Bombeiro</span>
-        </button>
-        <button class="prof" data-prof="medico" onclick="escolherProfissao('medico', this)">
-          <canvas class="prof-sprite" data-sprite="medico"></canvas>
-          <span class="prof-nome">Médico</span>
-        </button>
-        <button class="prof" data-prof="cozinheiro" onclick="escolherProfissao('cozinheiro', this)">
-          <canvas class="prof-sprite" data-sprite="cozinheiro"></canvas>
-          <span class="prof-nome">Cozinheiro</span>
-        </button>
-      </div>
-
-      <p id="prof-descricao" class="prof-descricao">Toque numa profissão para ver o que ela faz.</p>
-
-      <button id="btn-criar" class="btn btn-grande" onclick="comecarAventura()" disabled>🚀 COMEÇAR AVENTURA</button>
-    </div>
-  </section>
-
-  <!-- ============ TELA 4: ILHA INICIAL ============ -->
-  <section id="tela-ilha" class="tela">
-    <div class="ilha-topo">
-      <span id="ilha-info-heroi" class="ilha-info"></span>
-    </div>
-
-    <div class="ilha-cena">
-      <div class="ilha-chao">
-        <div class="palmeira">🌴</div>
-        <canvas id="heroi-sprite" class="heroi-sprite"></canvas>
-        <canvas class="ron-ilha" data-sprite="ron" title="Ron, o mascote!"></canvas>
-        <div class="fogueira">🔥</div>
-      </div>
-      <div class="ilha-mar"></div>
-    </div>
-
-    <div class="ilha-fala">
-      <p id="ilha-dialogo"></p>
-      <button id="btn-olhar" class="btn" onclick="explorarIlha()">Olhar em volta 👀</button>
-      <button id="btn-viajar" class="btn" onclick="viajarPrimeiraIlha()" style="display:none;">🚢 Viajar para a 1ª ilha</button>
-    </div>
-  </section>
-
-  <!-- ============ TELA 5: BATALHA ============ -->
-  <section id="tela-batalha" class="tela">
-    <div class="batalha-topo">
-      <span id="cap-titulo" class="cap-titulo">Capítulo 1</span>
-      <span id="hud-nivel" class="hud-nivel">Nv.1 XP 0/50</span>
-      <button id="btn-status-batalha" class="btn-status" onclick="abrirStatus('tela-batalha')">
-        📊 Status <span id="pontos-badge" class="pontos-badge" style="display:none;">0</span>
+  <main class="game-shell">
+    <header class="topbar">
+      <button id="logo-button" class="brand" type="button" aria-label="Voltar aos mundos">
+        <span class="brand-icon" aria-hidden="true">👨‍🍳</span>
+        <span>
+          <span class="eyebrow">JOGO PIXEL ART</span>
+          <strong>Bom Chefe</strong>
+        </span>
       </button>
-      <button class="btn-status" onclick="abrirLoja('tela-batalha')">🛒 Loja</button>
-      <button class="btn-som" onclick="alternarSom()" title="Ligar/desligar som">🔊</button>
-    </div>
+      <button id="help-button" class="icon-button" type="button" aria-label="Como jogar">?</button>
+    </header>
 
-    <div class="batalha-arena">
-      <!-- camada de efeitos/animações (projéteis, explosões, números de dano) -->
-      <div id="camada-efeitos" class="camada-efeitos"></div>
-
-      <!-- Inimigo -->
-      <div class="lado-inimigo">
-        <div class="combatente">
-          <span id="batalha-inimigo-nome" class="comb-nome">Inimigo</span>
-          <div class="barra-fundo"><div id="barra-inimigo" class="barra barra-inimigo"></div></div>
-          <span id="vida-inimigo-txt" class="vida-txt">0/0</span>
+    <section id="home-screen" class="screen">
+      <div class="hero-card pixel-card">
+        <div class="hero-sprite" aria-hidden="true">🍔</div>
+        <div>
+          <p class="eyebrow">SEU RESTAURANTE, SUAS REGRAS</p>
+          <h1>Escolha uma carreira</h1>
+          <p>Crie mundos diferentes e viva a rotina de um cozinheiro ou de um garçom.</p>
         </div>
-        <canvas id="batalha-inimigo-sprite" class="sprite sprite-inimigo"></canvas>
+        <button id="open-create-world" class="primary-button" type="button">+ Criar mundo</button>
       </div>
 
-      <div class="versus">⚔️</div>
-
-      <!-- Herói -->
-      <div class="lado-heroi">
-        <div class="heroi-com-ron">
-          <canvas id="batalha-heroi-sprite" class="sprite sprite-heroi"></canvas>
-          <canvas id="ron-batalha" class="ron-batalha" data-sprite="ron" title="Ron"></canvas>
+      <section class="worlds-section" aria-labelledby="worlds-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">PROGRESSO SALVO</p>
+            <h2 id="worlds-title">Meus mundos</h2>
+          </div>
         </div>
-        <div class="combatente">
-          <span id="batalha-heroi-nome" class="comb-nome">Herói</span>
-          <div class="barra-fundo"><div id="barra-heroi" class="barra barra-heroi"></div></div>
-          <span id="vida-heroi-txt" class="vida-txt">100/100</span>
+        <div id="world-list" class="world-list"></div>
+      </section>
+    </section>
+
+    <section id="create-screen" class="screen is-hidden" aria-labelledby="create-title">
+      <div class="create-card pixel-card">
+        <button id="cancel-create-world" class="back-button" type="button">← Voltar</button>
+        <p class="eyebrow">NOVO MUNDO</p>
+        <h1 id="create-title">Quem você quer ser?</h1>
+        <p class="intro-copy">Esta escolha define o mapa e o desafio do seu mundo.</p>
+
+        <label class="field-label" for="world-name">Nome do mundo</label>
+        <input id="world-name" class="pixel-input" type="text" maxlength="24" placeholder="Ex.: Lanchonete do Samuel" autocomplete="off" />
+
+        <div class="role-choices" role="radiogroup" aria-label="Escolha uma carreira">
+          <label class="role-choice selected">
+            <input type="radio" name="role" value="chef" checked />
+            <span class="role-icon" aria-hidden="true">👨‍🍳</span>
+            <span><strong>Cozinheiro</strong><small>Monte os pratos certos antes de o cliente perder a paciência.</small></span>
+          </label>
+          <label class="role-choice">
+            <input type="radio" name="role" value="waiter" />
+            <span class="role-icon" aria-hidden="true">🧑‍💼</span>
+            <span><strong>Garçom</strong><small>Leve o prato à mesa certa sem esbarrar nos obstáculos.</small></span>
+          </label>
         </div>
+
+        <button id="create-world-button" class="primary-button full-button" type="button">Começar aventura</button>
       </div>
-    </div>
+    </section>
 
-    <div class="batalha-log-box">
-      <p id="batalha-log">...</p>
-    </div>
-
-    <div class="batalha-acoes">
-      <button class="btn btn-acao" onclick="acaoAtacar()">⚔️ Atacar</button>
-      <button class="btn btn-acao btn-especial" onclick="acaoEspecial()">✨ Especial</button>
-      <button class="btn btn-acao btn-defender" onclick="acaoDefender()">🛡️ Defender</button>
-      <button id="btn-ron" class="btn btn-acao btn-ron" onclick="acaoRon()">🐉 Ron: Cuspir Fogo!</button>
-      <button id="btn-magia" class="btn btn-acao btn-magia" onclick="acaoDefenderMagia()" style="display:none;">🔮 Defender da Magia</button>
-      <button id="btn-mochila" class="btn btn-acao btn-mochila" onclick="abrirMochila()">🎒 Itens</button>
-    </div>
-
-    <!-- painel da mochila (poções) -->
-    <div id="mochila-painel" class="mochila-painel" style="display:none;">
-      <div class="mochila-box">
-        <h3>🎒 Suas Poções</h3>
-        <div id="mochila-lista" class="mochila-lista"></div>
-        <button class="btn" onclick="fecharMochila()">Fechar</button>
+    <section id="game-screen" class="screen is-hidden" aria-labelledby="game-title">
+      <div class="game-topline">
+        <button id="back-to-worlds" class="back-button" type="button">← Mundos</button>
+        <div class="world-title"><span id="role-badge">👨‍🍳 COZINHEIRO</span><strong id="game-title">Meu restaurante</strong></div>
+        <div class="coin-box" aria-label="Moedas"><span aria-hidden="true">🪙</span><strong id="coins-value">0</strong></div>
       </div>
+
+      <section class="mission-card pixel-card" aria-live="polite">
+        <div class="mission-icon" id="mission-icon" aria-hidden="true">📋</div>
+        <div class="mission-copy">
+          <p class="eyebrow" id="mission-overline">PEDIDO ATUAL</p>
+          <h2 id="mission-title">Preparando a cozinha...</h2>
+          <p id="mission-text">Aguarde um pedido.</p>
+          <div id="timer-wrap" class="timer-wrap"><div id="timer-bar" class="timer-bar"></div></div>
+        </div>
+      </section>
+
+      <section class="play-area" aria-label="Mapa do restaurante">
+        <div class="map-frame">
+          <div id="game-map" class="game-map" tabindex="0" aria-label="Mapa do restaurante. Use as setas e espaço para jogar."></div>
+        </div>
+        <div id="map-legend" class="map-legend"></div>
+      </section>
+
+      <section class="game-bottom">
+        <p id="game-message" class="game-message" role="status" aria-live="polite">Use as setas para andar. Aperte ESPAÇO para interagir.</p>
+        <div class="action-hint"><kbd>ESPAÇO</kbd> ou <kbd>ENTRAR</kbd> para agir</div>
+      </section>
+
+      <nav class="mobile-controls" aria-label="Controles de movimento">
+        <button class="control-button up" data-move="up" type="button" aria-label="Andar para cima">▲</button>
+        <button class="control-button left" data-move="left" type="button" aria-label="Andar para a esquerda">◀</button>
+        <button id="action-button" class="action-button" type="button">AÇÃO</button>
+        <button class="control-button right" data-move="right" type="button" aria-label="Andar para a direita">▶</button>
+        <button class="control-button down" data-move="down" type="button" aria-label="Andar para baixo">▼</button>
+      </nav>
+    </section>
+  </main>
+
+  <dialog id="help-dialog" class="game-dialog">
+    <button id="close-help-button" class="close-button" type="button" aria-label="Fechar ajuda">×</button>
+    <span class="dialog-icon">🎮</span>
+    <h2>Como jogar</h2>
+    <div class="help-columns">
+      <section><h3>👨‍🍳 Cozinheiro</h3><p>Ande até as bancadas para pegar ingredientes. No balcão, use AÇÃO para servir. Pedido errado ou demora fazem o cliente reclamar e tiram moedas. As três pimentas especiais criam o Rarinho, uma pegadinha de 3 moedas.</p></section>
+      <section><h3>🧑‍💼 Garçom</h3><p>Pegue o prato no balcão e leve à mesa indicada. Se bater em mesa, balcão ou parede enquanto carrega, o prato cai e você perde moedas.</p></section>
     </div>
-  </section>
+    <p class="help-tip">No computador: setas + Espaço ou Enter.<br />No celular: use os botões na parte inferior.</p>
+    <button id="close-help-main" class="primary-button full-button" type="button">Entendi!</button>
+  </dialog>
 
-  <!-- ============ TELA 6: FIM / VITÓRIA ============ -->
-  <section id="tela-fim" class="tela">
-    <div class="fim-box">
-      <h2 id="fim-titulo">Fim</h2>
-      <p id="fim-texto"></p>
-      <button id="btn-fim" class="btn btn-grande">Continuar</button>
-    </div>
-  </section>
-
-  <!-- ============ TELA 7: ÁLBUM DE CONQUISTAS ============ -->
-  <section id="tela-album" class="tela">
-    <div class="album-box">
-      <h2>🏅 Álbum de Conquistas</h2>
-      <p id="album-contador" class="album-contador">0 de 0 conquistas</p>
-      <div id="album-grade" class="album-grade"></div>
-      <button class="btn btn-grande" onclick="fecharAlbum()">⬅ Voltar</button>
-    </div>
-  </section>
-
-  <!-- ============ TELA 8: STATUS / UPGRADE ============ -->
-  <section id="tela-status" class="tela">
-    <div class="status-box">
-      <h2 id="status-cabecalho">🧑‍🍳 Herói — Nível 1</h2>
-      <p id="status-xp" class="status-xp">XP: 0 / 50</p>
-      <p id="status-pontos" class="status-pontos">Pontos disponíveis: 0</p>
-
-      <div id="status-atributos" class="status-atributos"></div>
-
-      <button class="btn btn-grande" onclick="fecharStatus()">⬅ Voltar</button>
-      <br>
-      <button class="btn btn-reset" onclick="resetarProgresso()">🔄 Recomeçar do zero</button>
-    </div>
-  </section>
-
-  <!-- ============ TELA 9: LOJA ============ -->
-  <section id="tela-loja" class="tela">
-    <div class="loja-box">
-      <h2>🛒 Loja do Herói</h2>
-      <p id="loja-moedas" class="loja-moedas">🪙 0 moedas</p>
-
-      <h3 class="loja-secao">🧪 Poções (usar na batalha)</h3>
-      <div id="loja-pocoes" class="loja-grade"></div>
-
-      <h3 class="loja-secao">🛡️ Equipamentos (bônus permanente)</h3>
-      <div id="loja-equipamentos" class="loja-grade"></div>
-
-      <button class="btn btn-grande" onclick="fecharLoja()">⬅ Voltar</button>
-    </div>
-  </section>
-
-  <!-- Popup que aparece ao ganhar uma conquista -->
-  <div id="popup-conquista" class="popup-conquista">
-    <div class="pop-emoji">🏅</div>
-    <div class="pop-textos">
-      <div class="pop-rotulo">Conquista desbloqueada!</div>
-      <div class="pop-titulo">Título</div>
-      <div class="pop-desc">Descrição</div>
-    </div>
-  </div>
-
-  <!-- Aviso para virar o celular na horizontal -->
-  <div id="aviso-girar">
-    <div class="aviso-girar-box">
-      <div class="aviso-girar-icone">📱↔️</div>
-      <p>Vire o celular na <b>horizontal</b> para jogar melhor!</p>
-      <button class="btn btn-continuar-pe" onclick="continuarEmPe()">Jogar em pé mesmo assim</button>
-    </div>
-  </div>
-
-  <script src="sprites.js"></script>
-  <script src="sons.js"></script>
-  <script src="efeitos.js"></script>
-  <script src="game.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
