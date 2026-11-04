@@ -39,3 +39,11 @@ Jogo de restaurante em pixel art, feito em HTML, CSS e JavaScript puro, sem serv
 - `README.md`: instruções para abrir e jogar.
 
 O progresso dos mundos é salvo no `localStorage` do navegador em que o jogo for aberto.
+
+## Próxima fase planejada: Mundo Mágico
+
+- Um terremoto transforma o restaurante em um mundo mágico, com cristais, chão brilhante e céu roxo.
+- Surge **Pimentinha**, um dragão de fogo amigável que só entrou na cozinha porque está com fome.
+- Para ajudá-lo, o cozinheiro prepara a **Sopa Chama Mágica**.
+- Ingredientes da Sopa Chama Mágica: pimenta mágica, chama encantada e pó de estrela.
+- Ao comer a sopa, Pimentinha fica feliz, solta fumaça colorida, o terremoto para e ele vira amigo do restaurante.
