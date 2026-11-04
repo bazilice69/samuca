@@ -155,7 +155,7 @@
 
   function startKitchenOrder() {
     if (!session || !currentWorld || currentWorld.role !== 'chef') return;
-    session.changingMission = false; session.order = { recipe: getRandom(recipes), timeLeft: 36, maxTime: 36 }; session.held = []; renderGame();
+    session.changingMission = false; session.order = { recipe: getRandom(recipes), timeLeft: 60, maxTime: 60 }; session.held = []; renderGame();
   }
 
   function sameIngredients(first, second) {
