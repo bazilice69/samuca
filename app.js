@@ -112,11 +112,11 @@
   function openWorld(id) {
     currentWorld = worlds.find((world) => world.id === id) || null;
     if (!currentWorld) return;
-    session = { player: { x: 1, y: 5 }, order: null, delivery: null, held: [], complaint: false, laughing: false, changingMission: false };
+    session = { player: { x: 4, y: 6 }, order: null, delivery: null, held: [], complaint: false, laughing: false, changingMission: false };
     setScreen('game');
     elements.roleBadge.textContent = `${roleIcon(currentWorld.role)} ${roleName(currentWorld.role).toUpperCase()}`;
     elements.gameTitle.textContent = currentWorld.name;
-    setMessage(currentWorld.role === 'chef' ? 'Vá até as bancadas, pegue ingredientes e sirva no balcão.' : 'Vá até o balcão para pegar o prato pronto.');
+    setMessage(currentWorld.role === 'chef' ? 'Siga os quadrados que estão brilhando. Chegue perto de um e aperte AÇÃO para pegar o ingrediente.' : 'Vá até o balcão para pegar o prato pronto.');
     if (currentWorld.role === 'chef') startKitchenOrder(); else startDelivery();
     renderGame(); window.setTimeout(() => elements.map.focus(), 0);
   }
@@ -232,7 +232,10 @@
   function specialTile(x, y) {
     if (currentWorld.role === 'chef') {
       const station = kitchenStations.find((item) => item.x === x && item.y === y);
-      if (station) return { className: 'is-station', symbol: ingredients[station.ingredient].icon };
+      if (station) {
+        const needed = session?.order?.recipe.items.includes(station.ingredient) && !session.held.includes(station.ingredient);
+        return { className: `is-station${needed ? ' is-needed' : ''}`, symbol: ingredients[station.ingredient].icon };
+      }
       if (pointIs({ x, y }, kitchenCounter)) return { className: 'is-counter', symbol: '🍽️' };
       if (kitchenStoves.some((stove) => pointIs({ x, y }, stove))) return { className: 'is-wall', symbol: '🔥' };
       if (x === 8 && y === 6) return { className: 'is-door', symbol: '🚪' };
@@ -294,7 +297,7 @@
       const percent = Math.max(0, (order.timeLeft / order.maxTime) * 100);
       elements.timerBar.style.width = `${percent}%`; elements.timerBar.classList.toggle('warning', percent <= 30);
       elements.missionTitle.textContent = `${order.recipe.icon} ${order.recipe.name} · ${order.recipe.value} moedas`;
-      elements.missionText.textContent = `Pegue: ${readableIngredientList(order.recipe.items)}. Na mão: ${session.held.length ? readableIngredientList(session.held) : 'nada'}. Segredo: as 3 pimentas fazem o Rarinho!`;
+      elements.missionText.textContent = `Os quadrados brilhando são os ingredientes que você precisa. Chegue perto de cada um e aperte AÇÃO. Pegue: ${readableIngredientList(order.recipe.items)}. Na mão: ${session.held.length ? readableIngredientList(session.held) : 'nada'}. Segredo: as 3 pimentas fazem o Rarinho!`;
       return;
     }
     const delivery = session.delivery;
