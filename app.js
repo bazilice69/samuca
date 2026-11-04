@@ -116,7 +116,7 @@
     setScreen('game');
     elements.roleBadge.textContent = `${roleIcon(currentWorld.role)} ${roleName(currentWorld.role).toUpperCase()}`;
     elements.gameTitle.textContent = currentWorld.name;
-    setMessage(currentWorld.role === 'chef' ? 'Siga os quadrados que estão brilhando. Chegue perto de um e aperte AÇÃO para pegar o ingrediente.' : 'Vá até o balcão para pegar o prato pronto.');
+    setMessage(currentWorld.role === 'chef' ? 'Siga os quadrados que estão brilhando. Fique em cima de um e aperte AÇÃO para pegar o ingrediente.' : 'Vá até o balcão para pegar o prato pronto.');
     if (currentWorld.role === 'chef') startKitchenOrder(); else startDelivery();
     renderGame(); window.setTimeout(() => elements.map.focus(), 0);
   }
@@ -125,7 +125,7 @@
   function persistWorld() { if (currentWorld) saveWorlds(); }
   function isNear(first, second) { return Math.abs(first.x - second.x) + Math.abs(first.y - second.y) <= 1; }
   function pointIs(point, other) { return point.x === other.x && point.y === other.y; }
-  function findKitchenStation(position) { return kitchenStations.find((station) => isNear(position, station)); }
+  function findKitchenStation(position) { return kitchenStations.find((station) => pointIs(position, station)); }
 
   function getBlockedTile(x, y) {
     if (x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT) return 'wall';
@@ -297,7 +297,7 @@
       const percent = Math.max(0, (order.timeLeft / order.maxTime) * 100);
       elements.timerBar.style.width = `${percent}%`; elements.timerBar.classList.toggle('warning', percent <= 30);
       elements.missionTitle.textContent = `${order.recipe.icon} ${order.recipe.name} · ${order.recipe.value} moedas`;
-      elements.missionText.textContent = `Os quadrados brilhando são os ingredientes que você precisa. Chegue perto de cada um e aperte AÇÃO. Pegue: ${readableIngredientList(order.recipe.items)}. Na mão: ${session.held.length ? readableIngredientList(session.held) : 'nada'}. Segredo: as 3 pimentas fazem o Rarinho!`;
+      elements.missionText.textContent = `Os quadrados brilhando são os ingredientes que você precisa. Fique em cima de cada um e aperte AÇÃO. Pegue: ${readableIngredientList(order.recipe.items)}. Na mão: ${session.held.length ? readableIngredientList(session.held) : 'nada'}. Segredo: as 3 pimentas fazem o Rarinho!`;
       return;
     }
     const delivery = session.delivery;
