@@ -27,4 +27,8 @@ Existe também o **Rarinho**, uma pegadinha especial feita com pimenta mexicana,
 
 Pegue o prato no balcão e entregue na mesa indicada. Se o personagem carregar um prato e bater em uma mesa, no balcão ou em uma parede, o prato cai no chão e o jogador perde moedas.
 
+### Pimentinha
+
+Pimentinha é o dragão de fogo amigável que recebe as crianças no salão. Cada criança feliz dá uma **estrela de alegria**. Aos sábados e domingos acontece o **Show do Pimentinha**: o jogador vai ao palco e escolhe uma pergunta para uma criança entrevistar o dragão.
+
 O progresso de moedas, pedidos entregues e erros é salvo automaticamente no navegador.

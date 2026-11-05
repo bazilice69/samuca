@@ -63,6 +63,11 @@
             <span class="role-icon" aria-hidden="true">🧑‍💼</span>
             <span><strong>Garçom</strong><small>Leve o prato à mesa certa sem esbarrar nos obstáculos.</small></span>
           </label>
+          <label class="role-choice pimentinha-choice">
+            <input type="radio" name="role" value="pimentinha" />
+            <span class="role-icon" aria-hidden="true">🐉</span>
+            <span><strong>Pimentinha</strong><small>Receba crianças no salão e faça shows mágicos aos sábados e domingos.</small></span>
+          </label>
         </div>
 
         <button id="create-world-button" class="primary-button full-button" type="button">Começar aventura</button>
@@ -73,7 +78,7 @@
       <div class="game-topline">
         <button id="back-to-worlds" class="back-button" type="button">← Mundos</button>
         <div class="world-title"><span id="role-badge">👨‍🍳 COZINHEIRO</span><strong id="game-title">Meu restaurante</strong></div>
-        <div class="coin-box" aria-label="Moedas"><span aria-hidden="true">🪙</span><strong id="coins-value">0</strong></div>
+        <div id="score-box" class="coin-box" aria-label="Moedas"><span id="score-icon" aria-hidden="true">🪙</span><strong id="coins-value">0</strong></div>
       </div>
 
       <section class="mission-card pixel-card" aria-live="polite">
@@ -115,9 +120,18 @@
     <div class="help-columns">
       <section><h3>👨‍🍳 Cozinheiro</h3><p>Fique em cima da bancada com o ingrediente que está brilhando e aperte AÇÃO para pegar. No balcão, use AÇÃO para servir. Pedido errado ou demora fazem o cliente reclamar e tiram moedas. As três pimentas especiais criam o Rarinho, uma pegadinha de 3 moedas.</p></section>
       <section><h3>🧑‍💼 Garçom</h3><p>Pegue o prato no balcão e leve à mesa indicada. Se bater em mesa, balcão ou parede enquanto carrega, o prato cai e você perde moedas.</p></section>
+      <section><h3>🐉 Pimentinha</h3><p>Receba as crianças no salão para ganhar estrelas de alegria. Aos sábados e domingos, vá ao palco e escolha uma pergunta para a entrevista do show.</p></section>
     </div>
     <p class="help-tip">No computador: setas + Espaço ou Enter.<br />No celular: use os botões na parte inferior.</p>
     <button id="close-help-main" class="primary-button full-button" type="button">Entendi!</button>
+  </dialog>
+
+  <dialog id="show-dialog" class="game-dialog show-dialog">
+    <button id="close-show-button" class="close-button" type="button" aria-label="Fechar perguntas">×</button>
+    <span class="dialog-icon">🐉🎤</span>
+    <h2>Show do Pimentinha</h2>
+    <p class="help-tip">Escolha qual pergunta a criança fará para o Pimentinha.</p>
+    <div id="question-options" class="question-options"></div>
   </dialog>
 
   <script src="app.js"></script>

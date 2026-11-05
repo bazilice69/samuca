@@ -39,3 +39,19 @@ Jogo de restaurante em pixel art, feito em HTML, CSS e JavaScript puro, sem serv
 - `README.md`: instruções para abrir e jogar.
 
 O progresso dos mundos é salvo no `localStorage` do navegador em que o jogo for aberto.
+
+## Modo Pimentinha
+
+- Pimentinha é o dragão de fogo amigável e mascote do restaurante.
+- Ele fica no salão e recebe crianças na recepção.
+- Cada criança feliz dá 1 estrela de alegria; as estrelas ficam salvas no mundo do Pimentinha.
+- Aos sábados e domingos acontece o **Show do Pimentinha** no palco.
+- Durante o show, o jogador escolhe uma pergunta para uma criança entrevistar Pimentinha. Uma das perguntas é: “Pimentinha, você é menino ou menina?”.
+- O show dá 2 estrelas de alegria.
+
+## Próxima fase planejada: Mundo Mágico
+
+- Um terremoto transforma o restaurante em um mundo mágico, com cristais, chão brilhante e céu roxo.
+- Surge Pimentinha, um dragão de fogo amigável que só entrou na cozinha porque está com fome.
+- Para ajudá-lo, o cozinheiro prepara a Sopa Chama Mágica com pimenta mágica, chama encantada e pó de estrela.
+- Ao comer a sopa, Pimentinha fica feliz, solta fumaça colorida, o terremoto para e ele vira amigo do restaurante.
